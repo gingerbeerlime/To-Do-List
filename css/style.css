@@ -1,0 +1,158 @@
+@charset "utf-8";
+/* 폰트 */
+@font-face {
+    font-family: 'GangwonEdu_OTFBoldA';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2201-2@1.0/GangwonEdu_OTFBoldA.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+* {
+    font-family: 'GangwonEdu_OTFBoldA';
+}
+#wrap {
+    margin: 0;
+    padding: 0;
+}
+#container {
+    margin: 0 auto;
+    margin-top: 100px;
+    width: 35%;
+    background-color: #fff7f4;
+    box-shadow: 1px 3px 6px #999;
+    padding: 30px;
+    box-sizing: border-box;
+}
+.ttl {
+    margin: 0 auto;
+    width: 100%;
+    height: 60px;
+    background-color:  tomato;
+    text-align: center;
+    line-height: 70px;
+    font-size: 37px;
+    margin-bottom: 15px;
+    color: white;
+    padding-top: 10px;
+}
+/* 입력창 */
+.input-wrap {
+    width: 100%;
+    height: 50px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+input[type="text"] {
+    width: 83%;
+    height: 40px;
+    padding-left: 10px;
+    border-radius: 5px;
+    border: 1px solid #c9bfbb;
+}
+input[type="text"]:focus {
+    outline: 2px solid tomato;
+}
+.btn-add {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    background-color: tomato;
+    margin-right: 2%;
+    cursor: pointer;
+    color: white;
+    font-size: 30px;
+    text-align: center;
+    line-height: 45px;
+}
+/* 투두리스트 */
+.to-do-list {
+    width: 100%;
+    padding: 10px 0;
+}
+.to-do-item {
+    width: 100%;
+    height: 40px;
+    background-color: #f9d7aa;
+    margin-bottom: 12px;
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+}
+input[type="checkbox"] {
+    display: none;
+}
+label {
+    width: 23px;
+    height: 23px;
+    background-color: white;
+    border-radius: 50%;
+    margin-left: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+.check-icon {
+    display: block;
+    width: 7px;
+    height: 11px;
+    border: 0;
+    transform: rotate(45deg);
+    position: relative;
+    top: -2px;
+    border-radius: 2px;
+}
+input[type="checkbox"]:checked + .check-icon {
+    border: solid tomato;
+    border-width: 0 3px 3px 0;
+}
+.to-do-text {
+    padding-left: 10px;
+    position: relative;
+    top: 2px;
+}
+.to-do-text-done {
+    padding-left: 10px;
+    position: relative;
+    top: 2px;
+    text-decoration: line-through;
+    color: gray;
+}
+.btn-remove {
+    width: 40px;
+    height: 40px;
+    border-radius: 0 15px 15px 0;
+    background-color: tomato;
+    margin-left: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    cursor: pointer;
+}
+/* 푸터 */
+footer {
+    width: 100%;
+    height: 50px;
+    background-color: tomato;
+    padding: 0 30px;
+    margin: 30px 0 -30px -30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.btn-clear-all {
+    width: 110px;
+    height: 35px;
+    border-radius: 30px;
+    background-color: whitesmoke;
+    color: tomato;
+    font-weight: bolder;
+    text-align: center;
+    font-size: 21px;
+    cursor: pointer;
+}
+.btn-clear-all span {
+    position: relative;
+    top: 3px;
+}
