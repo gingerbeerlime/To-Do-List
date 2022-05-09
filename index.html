@@ -7,6 +7,7 @@
     <title>ToDoList</title>
     <link rel="stylesheet" href="css/reset.css">
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/mediaqueries.css">
     <script src="https://kit.fontawesome.com/14410e483b.js" crossorigin="anonymous"></script>
 </head>
 <body>
@@ -29,108 +30,6 @@
             </footer>
         </div>
     </div>
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            //
-            const inputTodo = document.querySelector('.input-todo');
-            const addBtn = document.querySelector('.btn-add');
-            const toDoList = document.querySelector('.to-do-list');
-            const clearAllBtn = document.querySelector('.btn-clear-all');
-            // todo item key부여
-            let keyCount = 0;
-            // todo item = 0 표시메시지
-            const noItemMsg = document.createElement('p');
-            noItemMsg.textContent = 'To Do List가 비어있습니다.';
-            noItemMsg.classList.add('no-to-do-item');
-            toDoList.append(noItemMsg);
-
-            // 투두 추가 함수
-            const addTodo = () => {
-                // 태그 생성
-                const item = document.createElement('li');
-                const chkLbl = document.createElement('label');
-                const chkInput = document.createElement('input');
-                const chkIcon = document.createElement('span');
-                const text = document.createElement('span');
-                const removeBtn = document.createElement('button');
-                const removeIcon = document.createElement('i');          
-
-                // 입력값 유효성 검증
-                const todoText = inputTodo.value.trim();
-                if(!todoText) {
-                    alert("할 일을 입력해주세요");
-                    inputTodo.value = null;
-                    inputTodo.focus();
-                    return;
-                } 
-
-                let key = keyCount++;
-                item.setAttribute('data-key', key);
-
-                // 체크박스 조작(label, input, span)
-                chkInput.type = 'checkbox';
-                chkIcon.classList.add('check-icon');
-                chkLbl.append(chkInput, chkIcon);
-                // 체크시 text 스타일 변화
-                chkInput.addEventListener('change', (e) => {
-                    text.className = e.target.checked ? 'to-do-text-done' : 'to-do-text';
-                })
-
-                // text 조작
-                text.textContent = todoText;
-                text.classList.add('to-do-text');
-
-                // removeBtn 조작
-                removeIcon.className = 'fa-solid fa-trash';
-                removeBtn.append(removeIcon);
-                removeBtn.type = 'button';
-                removeBtn.classList.add('btn-remove');
-
-                // item 조작
-                item.append(chkLbl, text, removeBtn);
-                item.classList.add('to-do-item');
-
-                // toDoList에 아이템 추가
-                toDoList.append(item);
-
-                // 아이템 추가 후 입력값 초기화
-                inputTodo.value = null;
-
-                // li태그 개수 세기
-                let todoCnt = document.getElementsByTagName('li').length;
-                if(todoCnt === 1) toDoList.removeChild(noItemMsg);
-
-                // 투두 삭제 함수
-                const removeTodo = (key) => {
-                    const removeItem = document.querySelector(`[data-key="${key}"]`);
-                    console.log(removeItem);
-                    toDoList.removeChild(removeItem);
-                }
-
-                // 투두 삭제 함수 호출
-                removeBtn.addEventListener('click', () => {
-                    removeTodo(key);
-                    todoCnt = document.getElementsByTagName('li').length;
-                    if(todoCnt === 0) toDoList.append(noItemMsg);
-                });
-                // removeBtn.addEventListener('click', removeTodo)랑 위에꺼랑 차이가 뭐지,,,
-            }
-
-            // 투두 추가 함수 호출
-            addBtn.addEventListener('click', addTodo);
-            inputTodo.addEventListener('keyup', (e) => {
-                if(e.keyCode === 13) addTodo();
-            })
-
-            // Clear All 버튼 클릭시
-            clearAllBtn.addEventListener('click', () => {
-                while(toDoList.hasChildNodes()) {
-                    toDoList.removeChild(toDoList.firstChild);
-                }
-                toDoList.append(noItemMsg);
-            })  
-
-        })
-    </script>
+    <script type="text/javascript" src="js/script.js"></script>
 </body>
 </html>
