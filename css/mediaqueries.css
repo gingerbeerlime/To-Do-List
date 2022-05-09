@@ -1,0 +1,28 @@
+@charset "utf-8";
+/* 반응형(900px under) */
+@media screen and (max-width:850px) {
+    #container {
+        width: 50%;
+    }
+}
+/* 반응형(600px under) */
+@media screen and (max-width:600px) {
+    #container {
+        width: 60%;
+    }
+}
+/* 반응형(600px under) */
+@media screen and (max-width:500px) {
+    #container {
+        width: 75%;
+    }
+}
+/* 반응형(400px under) */
+@media screen and (max-width:400px) {
+    #container {
+        width: 90%;
+    }
+    .btn-add {
+        margin-left: 10px;
+    }
+}
