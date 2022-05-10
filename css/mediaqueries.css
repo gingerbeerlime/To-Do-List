@@ -1,4 +1,4 @@
-@charset "utf-8";
+@charset "UTF-8";
 /* 반응형(900px under) */
 @media screen and (max-width:850px) {
     #container {
