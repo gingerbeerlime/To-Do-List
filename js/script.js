@@ -35,7 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
         chkIcon.classList.add('check-icon')
         chkLbl.append(chkInput, chkIcon)
         // 체크박스 표시
-        if (todoValue.check === true) {
+        if (todoValue.check) {
             chkInput.checked = true
             text.className = 'todo-text-done'
         }
@@ -43,8 +43,10 @@ document.addEventListener('DOMContentLoaded', () => {
         chkInput.addEventListener('change', (e) => {
             text.className = e.target.checked ? 'todo-text-done' : 'todo-text'
             const targetObj = JSON.parse(localStorage.getItem(key))
-            if (targetObj.check) targetObj.check = false
-            else targetObj.check = true
+
+            targetObj.check = !targetObj.check
+            // targetObj.check ? targetObj.check = false : targetObj.check = true
+
             localStorage.setItem(key, JSON.stringify(targetObj))
         })
 
