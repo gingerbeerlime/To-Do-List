@@ -1,11 +1,12 @@
-@charset "utf-8";
-/* 폰트 */
+@charset "UTF-8";
+/* 공통 폰트 */
 @font-face {
     font-family: 'GangwonEdu_OTFBoldA';
     src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2201-2@1.0/GangwonEdu_OTFBoldA.woff') format('woff');
     font-weight: normal;
     font-style: normal;
 }
+/* 제목 폰트 */
 @font-face {
     font-family: 'CookieRun-Regular';
     src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/CookieRun-Regular.woff') format('woff');
@@ -28,6 +29,8 @@
     padding: 30px 30px 40px 30px;
     box-sizing: border-box;
 }
+/* <HEADER> */
+/* 제목 */
 .ttl {
     margin: 0 auto;
     width: 100%;
@@ -82,12 +85,14 @@ input[type="text"]:focus {
     text-align: center;
     line-height: 45px;
 }
-/* 투두리스트 */
-.to-do-list {
+/* <MAIN> : TODO항목 리스트 영역 */
+/* <ul> */
+.todo-list {
     width: 100%;
     padding: 10px 0;
 }
-.to-do-item {
+/* <li> */
+.todo-item {
     width: 100%;
     height: 40px;
     background-color: #c2e0d8de;
@@ -96,6 +101,7 @@ input[type="text"]:focus {
     display: flex;
     align-items: center;
 }
+/* 체크박스 */
 input[type="checkbox"] {
     display: none;
 }
@@ -124,18 +130,21 @@ input[type="checkbox"]:checked + .check-icon {
     border: solid #55a3a5;
     border-width: 0 4px 4px 0;
 }
-.to-do-text {
+/* <span>투두항목text */
+.todo-text {
     padding-left: 10px;
     position: relative;
     top: 2px;
 }
-.to-do-text-done {
+/* todo 체크시 스타일 */
+.todo-text-done {
     padding-left: 10px;
     position: relative;
     top: 2px;
     text-decoration: line-through;
-    color: gray;
+    color: rgb(143, 149, 155);
 }
+/* todo 개별 삭제 버튼 */
 .btn-remove {
     width: 40px;
     height: 40px;
@@ -148,7 +157,8 @@ input[type="checkbox"]:checked + .check-icon {
     color: white;
     cursor: pointer;
 }
-.no-to-do-item {
+/* todolist 비어있을 때 msg */
+.no-item {
     width: 100%;
     height: 40px;
     background-color: rgb(233, 177, 173, 0.7);
@@ -157,7 +167,7 @@ input[type="checkbox"]:checked + .check-icon {
     line-height: 40px;
     padding-top: 5px;
 }
-/* 푸터 */
+/* <FOOTER> */
 footer {
     width: 100%;
     height: 60px;
@@ -167,6 +177,7 @@ footer {
     justify-content: flex-end;
     align-items: center;
 }
+/* 초기화 버튼(todo 전체 삭제) */
 .btn-clear-all {
     width: 110px;
     height: 30px;
