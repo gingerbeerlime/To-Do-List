@@ -112,7 +112,6 @@ document.addEventListener('DOMContentLoaded', () => {
         todoValue.check = false
         // localStorage 데이터 저장
         localStorage.setItem(key, JSON.stringify(todoValue))
-
         // todoItem(li태그) 생성 함수 호출
         createTodoItem(key, todoValue)
 
@@ -144,32 +143,45 @@ document.addEventListener('DOMContentLoaded', () => {
     const closeModal = document.querySelector('.btn-cancel')
     const editInput = document.querySelector('.input-edit')
     const updateBtn = document.querySelector('.btn-update')
+    let cnt = 0
 
     const editTodo = (e) => {
         // 모달창 켜기
         editModal.style.display = 'block'
 
+        // 데이터 가져와서 입력창에 띄우기
         const targetKey = e.target.parentNode.getAttribute('data-key') ?? e.target.getAttribute('data-key')
         const targetObj = JSON.parse(localStorage.getItem(targetKey))
         document.querySelector('.input-edit').value = targetObj.txt
 
-        // update
+        // update(여기)
         function updateTodo () {
-            targetObj.txt = editInput.value
+            console.log(++cnt + '번째 호출')
+            console.log(targetObj)
+            console.log(this)
             console.log(e.target)
-            // localStorage.setItem(targetKey, JSON.stringify(targetObj))
+            targetObj.txt = editInput.value
+            e.target.querySelector('.todo-text').textContent = targetObj.txt
+            localStorage.setItem(targetKey, JSON.stringify(targetObj))
+            closeEdit()
         }
 
-        updateBtn.addEventListener('click', updateTodo, { once: true })
-
-        // [func] modal close 함수
-        closeModal.addEventListener('click', function closeEdit () {
-            editInput.value = ''
-            editModal.style.display = 'none'
-            closeModal.removeEventListener('click', closeEdit)
-        })
+        updateBtn.addEventListener('click', updateTodo, { once : true })   
     }
 
+    // [func] modal close 함수
+    function closeEdit () {
+        editModal.style.display = 'none'
+    }
+
+    closeModal.addEventListener('click', function () {
+        closeEdit()
+    })
+
     const todoItems = document.querySelectorAll('.todo-item')
-    todoItems.forEach(item => item.addEventListener('dblclick', editTodo))
+    //todoItems.forEach(item => item.addEventListener('dblclick', editTodo))
+    todoItems.forEach(function (item) {
+        item.addEventListener('dblclick', editTodo)
+        //item.removeEventListener('dblclick', editTodo)
+    })
 })
