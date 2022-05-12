@@ -3,6 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const addBtn = document.querySelector('.btn-add')
     const todoList = document.querySelector('.todo-list')
     const clearAllBtn = document.querySelector('.btn-clear-all')
+
     // todolist 비었을 때 msg
     const noItemMsg = document.createElement('p')
     noItemMsg.textContent = 'To Do List가 비어있습니다.'
@@ -19,9 +20,9 @@ document.addEventListener('DOMContentLoaded', () => {
     } else curKey = Number(todoKeys[todoKeys.length - 1]) + 1
 
     // [func]todoItem(li태그) 생성 함수
+    // @param key <string> = localStorage key(오름차순)
+    // @param todoValue <object> { txt : todo내용, check : true/false(default) }
     const createTodoItem = (key, todoValue) => {
-    // @param key = key
-    // @param todoValue <object> { txt : todotext, check : false }
         const item = document.createElement('li')
         const chkLbl = document.createElement('label')
         const chkInput = document.createElement('input')
@@ -34,7 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
         chkInput.type = 'checkbox'
         chkIcon.classList.add('check-icon')
         chkLbl.append(chkInput, chkIcon)
-        // 체크박스 표시
+        // @param : todoValue > check
         if (todoValue.check) {
             chkInput.checked = true
             text.className = 'todo-text-done'
@@ -43,14 +44,12 @@ document.addEventListener('DOMContentLoaded', () => {
         chkInput.addEventListener('change', (e) => {
             text.className = e.target.checked ? 'todo-text-done' : 'todo-text'
             const targetObj = JSON.parse(localStorage.getItem(key))
-
+            // 이벤트 발생시 [checked] true <=> false 전환
             targetObj.check = !targetObj.check
-            // targetObj.check ? targetObj.check = false : targetObj.check = true
-
             localStorage.setItem(key, JSON.stringify(targetObj))
         })
 
-        // @param <object> todoValue { txt : todo내용, check: true/false }
+        // @param todoValue > txt
         text.textContent = todoValue.txt
         text.classList.add('todo-text')
 
@@ -60,25 +59,23 @@ document.addEventListener('DOMContentLoaded', () => {
         removeBtn.type = 'button'
         removeBtn.classList.add('btn-remove')
 
-        // item 조작
-        // item key값 속성 부여 @param key
+        // item(li태그) 조작
+        // @param key
         item.setAttribute('data-key', key)
         item.append(chkLbl, text, removeBtn)
         item.classList.add('todo-item')
-        // todolist(<ul>)에 item(<li>)추가
+
         todoList.append(item)
 
         // [func]todoItem(li태그) 개별 삭제 함수
         const removeTodo = (key) => {
             const removeItem = document.querySelector(`[data-key="${key}"]`)
             todoList.removeChild(removeItem)
-            // localStorage 해당 데이터 삭제
             localStorage.removeItem(key)
         }
 
         // todoItem(li태그) 개별 삭제 함수 호출
         // ?여기서 key랑 상위 스코프 key랑 구분되는 이유,,?
-        // 이벤트 버블링, 스코프
         removeBtn.addEventListener('click', () => {
             removeTodo(key)
             const todoCnt = document.getElementsByTagName('li').length
@@ -86,7 +83,7 @@ document.addEventListener('DOMContentLoaded', () => {
         })
     }
 
-    // 처음 로딩시 localStorage 데이터 불러오기
+    // [func]처음 로딩시 localStorage 데이터 불러오기
     (function loadTodo () {
         let todoValue
         for (const key of todoKeys) {
@@ -98,7 +95,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // [func]todo 추가 함수
     const addTodo = () => {
-    // 입력값 유효성 검증
+        // 입력값 유효성 검증
         const todoText = inputTodo.value.trim()
         if (!todoText) {
             alert('할 일을 입력해주세요')
@@ -141,4 +138,38 @@ document.addEventListener('DOMContentLoaded', () => {
         localStorage.clear()
         todoList.append(noItemMsg)
     })
+
+    // todo 수정
+    const editModal = document.querySelector('.modal-wrap')
+    const closeModal = document.querySelector('.btn-cancel')
+    const editInput = document.querySelector('.input-edit')
+    const updateBtn = document.querySelector('.btn-update')
+
+    const editTodo = (e) => {
+        // 모달창 켜기
+        editModal.style.display = 'block'
+
+        const targetKey = e.target.parentNode.getAttribute('data-key') ?? e.target.getAttribute('data-key')
+        const targetObj = JSON.parse(localStorage.getItem(targetKey))
+        document.querySelector('.input-edit').value = targetObj.txt
+
+        // update
+        function updateTodo () {
+            targetObj.txt = editInput.value
+            console.log(e.target)
+            // localStorage.setItem(targetKey, JSON.stringify(targetObj))
+        }
+
+        updateBtn.addEventListener('click', updateTodo, { once: true })
+
+        // [func] modal close 함수
+        closeModal.addEventListener('click', function closeEdit () {
+            editInput.value = ''
+            editModal.style.display = 'none'
+            closeModal.removeEventListener('click', closeEdit)
+        })
+    }
+
+    const todoItems = document.querySelectorAll('.todo-item')
+    todoItems.forEach(item => item.addEventListener('dblclick', editTodo))
 })

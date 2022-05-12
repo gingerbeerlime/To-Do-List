@@ -1,9 +1,7 @@
-1. 웹페이지 로드시 로컬스토리지 값 가져오기(키 순번대로) - 완료
 2. drag n drop으로 우선순위 바꿀 수 있도록 하기
 3. 수정 기능 
 4. todo 달성률
-5. babel, webpack, eslint
-6. 체크된 상태도 localStorage에 저장 - 완료
+5. babel, webpack, 
 7. data-key 속성 사용하지 않고 localStorage key로만 삭제하기
 8. key랑 curKey를 합칠 수 있는지 확인
 
