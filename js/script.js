@@ -17,7 +17,9 @@ document.addEventListener('DOMContentLoaded', () => {
     if (localStorage.length === 0) {
         curKey = 0
         todoList.append(noItemMsg)
-    } else curKey = Number(todoKeys[todoKeys.length - 1]) + 1
+    } else {
+        curKey = Number(todoKeys[todoKeys.length - 1]) + 1
+    }
 
     // [func]todoItem(li태그) 생성 함수
     // @param key <string> = localStorage key(오름차순)
@@ -140,48 +142,51 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // todo 수정
     const editModal = document.querySelector('.modal-wrap')
-    const closeModal = document.querySelector('.btn-cancel')
     const editInput = document.querySelector('.input-edit')
     const updateBtn = document.querySelector('.btn-update')
-    let cnt = 0
 
-    const editTodo = (e) => {
-        // 모달창 켜기
-        editModal.style.display = 'block'
-
-        // 데이터 가져와서 입력창에 띄우기
-        const targetKey = e.target.parentNode.getAttribute('data-key') ?? e.target.getAttribute('data-key')
+    // [func]todo 수정 모달 열기 함수
+    const openModal = (e) => {
+        editModal.style.display = 'flex'
+        // localStorage todo-txt 값 가져와서 input창에 보여주기
+        const targetKey = e.target.getAttribute('data-key') ?? e.target.parentNode.getAttribute('data-key')
         const targetObj = JSON.parse(localStorage.getItem(targetKey))
-        document.querySelector('.input-edit').value = targetObj.txt
-
-        // update(여기)
-        function updateTodo () {
-            console.log(++cnt + '번째 호출')
-            console.log(targetObj)
-            console.log(this)
-            console.log(e.target)
-            targetObj.txt = editInput.value
-            e.target.querySelector('.todo-text').textContent = targetObj.txt
-            localStorage.setItem(targetKey, JSON.stringify(targetObj))
-            closeEdit()
-        }
-
-        updateBtn.addEventListener('click', updateTodo, { once : true })   
+        editInput.value = targetObj.txt
+        // 현재 수정 대상 data-key값 sessionStorage 등록
+        sessionStorage.setItem('edit', targetKey)
     }
 
-    // [func] modal close 함수
-    function closeEdit () {
+    // [func]todo 수정 업데이트 함수
+    const updateTodo = () => {
+        // 현재 수정 대상 데이터 가져오기
+        const editKey = sessionStorage.getItem('edit')
+        const editObj = JSON.parse(localStorage.getItem(editKey))
+        const editItem = document.querySelector(`[data-key="${editKey}"]`)
+        // span 태그
+        const editTxt = editItem.children[1]
+
+        // localStorage 변경된 값 저장
+        editObj.txt = editInput.value
+        localStorage.setItem(editKey, JSON.stringify(editObj))
+        // span태그 text 변경
+        editTxt.textContent = editInput.value
+
+        // 모달창 닫기
+        closeModal()
+    }
+
+    // [func] 모달 닫기 함수
+    function closeModal () {
         editModal.style.display = 'none'
     }
 
-    closeModal.addEventListener('click', function () {
-        closeEdit()
+    todoList.addEventListener('dblclick', openModal)
+    updateBtn.addEventListener('click', updateTodo)
+    editInput.addEventListener('keyup', (e) => {
+        if (e.keyCode === 13) updateTodo()
     })
-
-    const todoItems = document.querySelectorAll('.todo-item')
-    //todoItems.forEach(item => item.addEventListener('dblclick', editTodo))
-    todoItems.forEach(function (item) {
-        item.addEventListener('dblclick', editTodo)
-        //item.removeEventListener('dblclick', editTodo)
+    // 외부레이어 클릭 or 닫기 버튼 클릭시 모달 닫기
+    editModal.addEventListener('click', (e) => {
+        if (e.target.className === 'modal-wrap' || e.target.tagName === 'I') closeModal()
     })
 })
