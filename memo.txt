@@ -1,9 +1,8 @@
 2. drag n drop으로 우선순위 바꿀 수 있도록 하기
-3. 수정 기능 
 4. todo 달성률
 5. babel, webpack, 
-7. data-key 속성 사용하지 않고 localStorage key로만 삭제하기
 8. key랑 curKey를 합칠 수 있는지 확인
+9. viewport 최소 가로길이 지정
 
 **value에 배열 저장하면 순서 안바뀜
 
