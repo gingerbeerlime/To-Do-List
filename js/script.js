@@ -77,7 +77,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         // todoItem(li태그) 개별 삭제 함수 호출
-        // ?여기서 key랑 상위 스코프 key랑 구분되는 이유,,?
         removeBtn.addEventListener('click', () => {
             removeTodo(key)
             const todoCnt = document.getElementsByTagName('li').length
