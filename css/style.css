@@ -197,7 +197,7 @@ footer {
     border-radius: 30px;
     background-color: #C7C4CF;
     color: white;
-    box-shadow: 0 0 4px #999;
+    box-shadow: 0 0 2px #777;
     text-align: center;
     font-size: 21px;
     cursor: pointer;
@@ -221,9 +221,9 @@ footer {
     align-items: center;
 }
 .icon-close {
-    display: block;
+    display: none;
     width: 23px;
-    height: 50px;
+    height: 45px;
     color: rgb(169, 169, 169);
     cursor: pointer;
 }
@@ -248,13 +248,10 @@ footer {
     border-radius: 5px;
     border: 1px solid #c9bfbb;
 }
-.btn-wrap {
-    width: 100%;
-    height: 30px;
-    display: flex;
-    justify-content: center;
+.input-edit:focus {
+    outline: 2px solid #E9B1AD;
 }
-.modal-btn {
+.btn-update {
     width: 30%;
     height: 30px;
     background-color: #E9B1AD;
@@ -265,7 +262,7 @@ footer {
     box-shadow: 0 0 6px #999;
     margin-bottom: 10px;
 }
-.modal-btn > span {
+.btn-update > span {
     color: white;
     font-size: 18px;
     line-height: 35px;
