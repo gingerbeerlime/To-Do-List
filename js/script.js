@@ -53,6 +53,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // @param todoObj <object> { txt : todo내용, checked : true/false(default) }
     const createTodoItem = (todoObj) => {
         const item = document.createElement('li')
+        const wrapper = document.createElement('div')
         const chkLbl = document.createElement('label')
         const chkInput = document.createElement('input')
         const chkIcon = document.createElement('span')
@@ -81,8 +82,14 @@ document.addEventListener('DOMContentLoaded', () => {
         removeBtn.type = 'button'
         removeBtn.classList.add('btn-remove')
 
+        // wrapper 조작
+        wrapper.append(chkLbl, text, removeBtn)
+        wrapper.classList.add('todo-wrap')
+
         // item(li태그) 조작
-        item.append(chkLbl, text, removeBtn)
+        item.setAttribute('draggable', true)
+        // item.append(chkLbl, text, removeBtn)
+        item.append(wrapper)
         item.classList.add('todo-item')
 
         // todolist(<ul>)에 item(<li>) 추가
@@ -230,4 +237,56 @@ document.addEventListener('DOMContentLoaded', () => {
     editModal.addEventListener('click', (e) => {
         if (e.target.className === 'modal-wrap' || e.target.tagName === 'I') closeModal()
     })
+
+    // ----------------------------------------------------//
+    // drag and drop(todo 순서 바꾸기)
+
+    // [func]drag start : 이동시킬 데이터 저장
+    function onDragStart (e) {
+        // const ghostImg = this.cloneNode(true)
+        e.dataTransfer.setData('idx', getIndex(e.target))
+        // e.dataTransfer.setDragImage(ghostImg, 0, 0)
+        e.currentTarget.style.backgroundColor = '#E9B1AD'
+    }
+
+    // [func]drop : 배열 내 데이터 순서 reorder
+    function onDrop (e) {
+        const idx = Number(e.dataTransfer.getData('idx'))
+        const dropIdx = getIndex(e.target)
+        if (dropIdx === undefined) return
+        todoList.insertBefore(todoList.children[idx], todoList.children[dropIdx])
+        // localStorage 데이터 교환
+        const todoData = getTodoData()
+        const dragData = todoData.slice(idx, idx + 1)
+        // dragData 복사 후 추가
+        todoData.splice(dropIdx, 0, dragData[0])
+        // 기존 dragData 삭제
+        if (idx === dropIdx) return
+        if (idx > dropIdx) {
+            todoData.splice(idx + 1, 1)
+        } else {
+            todoData.splice(idx, 1)
+        }
+        // localStorage 변경 데이터 저장
+        setTodoData(todoData)
+
+        e.dataTransfer.clearData()
+    }
+
+    // [func]drag end : 재정렬 완료시 원래 색상으로
+    function onDragEnd (e) {
+        e.currentTarget.style.backgroundColor = '#c2e0d8de'
+    }
+
+    const todoItems = document.getElementsByTagName('li')
+
+    // [event] dragevent 함수 연결
+    for (const item of todoItems) {
+        item.addEventListener('dragstart', onDragStart)
+        item.addEventListener('dragend', onDragEnd)
+    }
+    todoList.addEventListener('dragover', function (e) {
+        e.preventDefault()
+    }, false)
+    todoList.addEventListener('drop', onDrop)
 })

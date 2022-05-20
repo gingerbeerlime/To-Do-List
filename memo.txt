@@ -1,10 +1,11 @@
 2. drag n drop으로 우선순위 바꿀 수 있도록 하기
 4. todo 달성률
 5. babel, webpack, 
-8. key랑 curKey를 합칠 수 있는지 확인
 9. viewport 최소 가로길이 지정
-
-**value에 배열 저장하면 순서 안바뀜
+10. drag 노드 마우스 포인터 따라다니게
+11. 페이징 more
+12. margin > padding?으로 바꿔서 dropzone에 인식되도록
+13. 체크시 가장 아래로
 
 발표
 프로젝트 목적, 핵심 기능, 중요 내용 요약
