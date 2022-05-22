@@ -88,7 +88,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // item(li태그) 조작
         item.setAttribute('draggable', true)
-        // item.append(chkLbl, text, removeBtn)
         item.append(wrapper)
         item.classList.add('todo-item')
 
@@ -216,7 +215,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const editIdx = sessionStorage.getItem('edit')
         const todoData = getTodoData()
         const editItem = todoList.children[editIdx]
-        const editTxt = editItem.children[1]
+        const editTxt = editItem.firstChild.children[1]
 
         // localStorage 변경된 값 저장
         todoData[editIdx].txt = editInput.value
@@ -246,13 +245,14 @@ document.addEventListener('DOMContentLoaded', () => {
         // const ghostImg = this.cloneNode(true)
         e.dataTransfer.setData('idx', getIndex(e.target))
         // e.dataTransfer.setDragImage(ghostImg, 0, 0)
-        e.currentTarget.style.backgroundColor = '#E9B1AD'
+        e.currentTarget.firstChild.style.backgroundColor = '#e9b1ad99'
+        e.currentTarget.firstChild.children[2].style.backgroundColor = '#a07977'
     }
 
     // [func]drop : 배열 내 데이터 순서 reorder
     function onDrop (e) {
         const idx = Number(e.dataTransfer.getData('idx'))
-        const dropIdx = getIndex(e.target)
+        const dropIdx = getIndex(findParentNode(e.target, 'LI'))
         if (dropIdx === undefined) return
         todoList.insertBefore(todoList.children[idx], todoList.children[dropIdx])
         // localStorage 데이터 교환
@@ -275,7 +275,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // [func]drag end : 재정렬 완료시 원래 색상으로
     function onDragEnd (e) {
-        e.currentTarget.style.backgroundColor = '#c2e0d8de'
+        e.currentTarget.firstChild.style.backgroundColor = '#c2e0d8de'
+        e.currentTarget.firstChild.children[2].style.backgroundColor = '#79C0C3'
     }
 
     const todoItems = document.getElementsByTagName('li')
