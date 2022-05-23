@@ -1,10 +1,7 @@
 2. drag n drop으로 우선순위 바꿀 수 있도록 하기
 4. todo 달성률
 5. babel, webpack, 
-9. viewport 최소 가로길이 지정
 10. drag 노드 마우스 포인터 따라다니게
-11. 페이징 more
-12. margin > padding?으로 바꿔서 dropzone에 인식되도록
 13. 체크시 가장 아래로
 
 발표

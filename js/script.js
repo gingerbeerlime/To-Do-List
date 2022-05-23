@@ -60,10 +60,13 @@ document.addEventListener('DOMContentLoaded', () => {
         const text = document.createElement('span')
         const removeBtn = document.createElement('button')
         const removeIcon = document.createElement('i')
+        const sortIcon = document.createElement('i')
 
         // checkbox 조작(label, input, span)
         chkInput.type = 'checkbox'
+        chkInput.classList.add('check-todo')
         chkIcon.classList.add('check-icon')
+        chkLbl.classList.add('check-label')
         chkLbl.append(chkInput, chkIcon)
         // @param : todoObj.checked
         if (todoObj.checked) {
@@ -82,19 +85,23 @@ document.addEventListener('DOMContentLoaded', () => {
         removeBtn.type = 'button'
         removeBtn.classList.add('btn-remove')
 
+        // ordering icon 조작
+        sortIcon.style.display = 'none'
+        sortIcon.className = 'fa-solid fa-sort'
+
         // wrapper 조작
-        wrapper.append(chkLbl, text, removeBtn)
+        wrapper.append(chkLbl, text, removeBtn, sortIcon)
         wrapper.classList.add('todo-wrap')
 
         // item(li태그) 조작
-        item.setAttribute('draggable', true)
+        item.setAttribute('draggable', false)
         item.append(wrapper)
         item.classList.add('todo-item')
 
         // todolist(<ul>)에 item(<li>) 추가
         todoList.append(item)
 
-        // -[func]todoItem(li태그) localStorage 삭제 함수
+        // -[func]todoItem localStorage 삭제 함수
         const removeTodo = (idx) => {
             const todoData = getTodoData()
             todoData.splice(idx, 1)
@@ -107,7 +114,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const idx = getIndex(removeItem)
             // localStorage에서 삭제
             removeTodo(idx)
-            // DOM 요소 삭제
+            // 노드 삭제
             todoList.removeChild(removeItem)
             // todo Count
             const todoCnt = document.getElementsByTagName('LI').length
@@ -198,6 +205,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const eventTarget = findParentNode(e.target, 'LI')
         const idx = getIndex(eventTarget)
         const targetObj = getTodoData()[idx]
+
         editInput.value = targetObj.txt
 
         // 수정중인 아이템 인덱스값 세션에 저장
@@ -245,15 +253,16 @@ document.addEventListener('DOMContentLoaded', () => {
         // const ghostImg = this.cloneNode(true)
         e.dataTransfer.setData('idx', getIndex(e.target))
         // e.dataTransfer.setDragImage(ghostImg, 0, 0)
-        e.currentTarget.firstChild.style.backgroundColor = '#e9b1ad99'
-        e.currentTarget.firstChild.children[2].style.backgroundColor = '#a07977'
+        const todoWrap = e.currentTarget.firstChild
+        todoWrap.style.backgroundColor = '#e9b1ad99'
+        todoWrap.children[3].style.color = '#a07977'
     }
 
     // [func]drop : 배열 내 데이터 순서 reorder
     function onDrop (e) {
         const idx = Number(e.dataTransfer.getData('idx'))
         const dropIdx = getIndex(findParentNode(e.target, 'LI'))
-        if (dropIdx === undefined) return
+
         todoList.insertBefore(todoList.children[idx], todoList.children[dropIdx])
         // localStorage 데이터 교환
         const todoData = getTodoData()
@@ -261,8 +270,9 @@ document.addEventListener('DOMContentLoaded', () => {
         // dragData 복사 후 추가
         todoData.splice(dropIdx, 0, dragData[0])
         // 기존 dragData 삭제
-        if (idx === dropIdx) return
-        if (idx > dropIdx) {
+        if (idx === dropIdx) {
+            return
+        } else if (idx > dropIdx) {
             todoData.splice(idx + 1, 1)
         } else {
             todoData.splice(idx, 1)
@@ -273,13 +283,40 @@ document.addEventListener('DOMContentLoaded', () => {
         e.dataTransfer.clearData()
     }
 
+    //  코드 정리
     // [func]drag end : 재정렬 완료시 원래 색상으로
     function onDragEnd (e) {
-        e.currentTarget.firstChild.style.backgroundColor = '#c2e0d8de'
-        e.currentTarget.firstChild.children[2].style.backgroundColor = '#79C0C3'
+        const todoWrap = e.currentTarget.firstChild
+        todoWrap.style.backgroundColor = '#c2e0d8de'
+        todoWrap.children[3].style.color = '#588b8d'
     }
 
     const todoItems = document.getElementsByTagName('li')
+    const chkReorder = document.querySelector('.check-reorder')
+
+    chkReorder.addEventListener('change', (e) => {
+        const status = e.target.checked ? 'true' : 'false'
+        const removeBtns = document.querySelectorAll('.btn-remove')
+        const sortIcons = document.querySelectorAll('.fa-sort')
+
+        for (const btn of removeBtns) {
+            if (e.target.checked) {
+                btn.style.display = 'none'
+                for (const icon of sortIcons) {
+                    icon.style.display = 'flex'
+                }
+            } else {
+                for (const icon of sortIcons) {
+                    icon.style.display = 'none'
+                }
+                btn.style.display = 'flex'
+            }
+        }
+
+        for (const child of todoList.childNodes) {
+            child.setAttribute('draggable', status)
+        }
+    })
 
     // [event] dragevent 함수 연결
     for (const item of todoItems) {
