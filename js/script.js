@@ -125,25 +125,32 @@ document.addEventListener('DOMContentLoaded', () => {
             const eventTarget = findParentNode(e.target, 'LI')
             const idx = getIndex(eventTarget)
             const todoData = getTodoData()
-
             // text 스타일 변경
             text.className = e.target.checked ? 'todo-text-done' : 'todo-text'
-
-            // 체크된 값 변경, 이동
+            // 체크 상태 true <-> false 전환
             todoData[idx].checked = !todoData[idx].checked
-
+            // checked:true - 리스트 맨 하단으로 이동, checked:false - 미체크 항목 중 마지막 위치로
             if (todoData[idx].checked) {
                 // Node 이동
                 todoList.append(todoList.removeChild(todoList.children[idx]))
                 // localStorage 값 이동
                 todoData.push(...todoData.splice(idx, 1))
             } else {
-                // 체크해제시 체크된 값 앞으로 이동
-                console.log(e.target)
-                // todoList.insertBefore(todoList.children[idx], todoList.children[dropIdx])
-                // todoList.insertBefore(todoList.removeChild(todoList.children[idx]), 가장 첫번째 체크된 인덱스)
+                // 첫번째 체크 항목 인덱스 찾기
+                function findChkIdx () {
+                    for (let i = 0; i < todoData.length; i++) {
+                        if (todoData[i].checked) return i
+                    }
+                }
+                // Node 이동
+                const firstChkIdx = findChkIdx()
+                if ((idx + 1) !== firstChkIdx) todoList.insertBefore(todoList.removeChild(todoList.children[idx]), todoList.children[firstChkIdx])
+                // localStorage 값 이동
+                console.log(idx + 1)
+                console.log(firstChkIdx)
+                console.log(idx + 1 === firstChkIdx)
+                if ((idx + 1) !== firstChkIdx) todoData.splice(firstChkIdx, 0, ...todoData.splice(idx, 1))
             }
-
             setTodoData(todoData)
         })
     }
@@ -266,8 +273,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // [func]drag start : 이동시킬 데이터 저장
     function onDragStart (e) {
         e.dataTransfer.setData('idx', getIndex(e.target))
-        // <div>wrapper</div>
         const todoWrap = e.currentTarget.firstChild
+        // <div>wrapper</div>
         todoWrap.style.backgroundColor = '#588b8d'
         // <span>text</span>
         todoWrap.children[1].style.color = 'white'
@@ -309,7 +316,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const todoWrap = e.currentTarget.firstChild
         todoWrap.style.backgroundColor = '#c2e0d8de'
         todoWrap.children[3].style.color = '#588b8d'
-        todoWrap.children[1].style.color = '#000'
+        todoWrap.children[1].style.color = todoWrap.children[0].children[0].checked ? '#8f959b' : '#000'
     }
 
     const todoItems = document.getElementsByTagName('li')

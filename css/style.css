@@ -30,8 +30,13 @@
     padding: 30px 30px 40px 30px;
     box-sizing: border-box;
     position: relative;
+    display: flex;
+    flex-direction: column;
 }
 /* <HEADER> */
+header {
+    width: 100%;
+}
 /* 제목 */
 .ttl {
     margin: 0 auto;
@@ -96,16 +101,20 @@
     transition: 0.2s all ease;
 }
 /* <MAIN> : TODO항목 리스트 영역 */
+main {
+    width: 100%;
+}
 /* <ul> */
 .todo-list {
     width: 100%;
     padding: 10px 0;
+    margin-bottom: 40px;
 }
 /* <li> */
 .todo-item {
     width: 100%;
     height: 54px;
-    padding-top: 12px;
+    padding: 12px 0 0 0;
     cursor: pointer;
     box-sizing: border-box;
     background-color: transparent;
@@ -164,7 +173,7 @@
 /* todo 체크시 스타일 */
 .todo-text-done {
     text-decoration: line-through;
-    color: rgb(143, 149, 155);
+    color: #8f959b;
 }
 /* todo 개별 삭제 버튼 */
 .btn-remove {
@@ -203,12 +212,12 @@
 /* <FOOTER> */
 footer {
     width: 100%;
-    height: 60px;
-    padding: 0 30px;
-    margin: 10px 0 -30px -30px;
+    height: 30px;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    padding: 0 5px;
+    box-sizing: border-box;
 }
 /* 순서바꾸기 버튼 */
 .sort-label {
