@@ -97,8 +97,18 @@ document.addEventListener('DOMContentLoaded', () => {
         item.append(wrapper)
         item.classList.add('todo-item')
 
+        // [임시]첫번째 체크박스 인덱스값
+        function findChkIdx () {
+            const todoData = getTodoData()
+            for (let i = 0; i < todoData.length; i++) {
+                if (todoData[i].checked) return i
+            }
+        }
+
         // todolist(<ul>)에 item(<li>) 추가
-        todoList.append(item)
+        // todoList.append(item)
+        console.log(findChkIdx())
+        todoList.insertBefore(item, todoList.children[findChkIdx()])
 
         // -[func]todoItem localStorage 삭제 함수
         const removeTodo = (idx) => {
@@ -146,10 +156,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const firstChkIdx = findChkIdx()
                 if ((idx + 1) !== firstChkIdx) todoList.insertBefore(todoList.removeChild(todoList.children[idx]), todoList.children[firstChkIdx])
                 // localStorage 값 이동
-                console.log(idx + 1)
-                console.log(firstChkIdx)
-                console.log(idx + 1 === firstChkIdx)
-                if ((idx + 1) !== firstChkIdx) todoData.splice(firstChkIdx, 0, ...todoData.splice(idx, 1))
+                if ((idx + 1) !== firstChkIdx && firstChkIdx !== undefined) todoData.splice(firstChkIdx, 0, ...todoData.splice(idx, 1))
             }
             setTodoData(todoData)
         })
