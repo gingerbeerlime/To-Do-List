@@ -3,6 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const addBtn = document.querySelector('.btn-add')
     const todoList = document.querySelector('.todo-list')
     const clearAllBtn = document.querySelector('.btn-clear-all')
+    const chkSort = document.querySelector('.sort-check')
 
     // todolist 비었을 때 msg
     const noItemMsg = document.createElement('p')
@@ -28,24 +29,22 @@ document.addEventListener('DOMContentLoaded', () => {
         localStorage.setItem('todo-data', JSON.stringify(newData))
     }
 
-    // [func]조작하는 아이템 index 가져오는 함수
-    function getIndex (eventTarget) {
-        const itemList = document.querySelectorAll('li')
-        if (!eventTarget) return itemList.length
-        for (let idx = 0; idx < itemList.length; idx++) {
-            if (eventTarget === itemList[idx]) return idx
-        }
-    }
-
-    // [func]parentNode 중 특정 태그 찾는 함수
-    // @param tagName : 찾고싶은 tag종류 전달
-    function findParentNode (eTarget, tagName) {
-        if (eTarget.tagName === tagName) return eTarget
-        else if (eTarget.tagName === 'UL') return null
-        while (eTarget.parentNode.tagName !== tagName) {
+    // [func]parentNode 중 <li> 태그 찾아서 반환하는 함수
+    function findLINode (eTarget) {
+        while (eTarget.parentNode.tagName !== 'LI') {
             eTarget = eTarget.parentNode
         }
         return eTarget.parentNode
+    }
+
+    // [func]조작하는 todoItem(li태그) index 가져오는 함수
+    function getIndex (eTarget) {
+        const itemList = document.querySelectorAll('li')
+        const item = eTarget.tagName === 'LI' ? eTarget : findLINode(eTarget)
+
+        for (let idx = 0; idx < itemList.length; idx++) {
+            if (item === itemList[idx]) return idx
+        }
     }
 
     // [func]todoItem(li태그) 생성 함수
@@ -84,11 +83,11 @@ document.addEventListener('DOMContentLoaded', () => {
         removeBtn.type = 'button'
         removeBtn.classList.add('btn-remove')
 
-        // ordering icon 조작
+        // sortIcon 조작
         sortIcon.style.display = 'none'
         sortIcon.className = 'fa-solid fa-sort'
 
-        // wrapper 조작
+        // wrapper(div태그) 조작
         wrapper.append(chkLbl, text, removeBtn, sortIcon)
         wrapper.classList.add('todo-wrap')
 
@@ -96,19 +95,6 @@ document.addEventListener('DOMContentLoaded', () => {
         item.setAttribute('draggable', false)
         item.append(wrapper)
         item.classList.add('todo-item')
-
-        // [임시]첫번째 체크박스 인덱스값
-        function findChkIdx () {
-            const todoData = getTodoData()
-            for (let i = 0; i < todoData.length; i++) {
-                if (todoData[i].checked) return i
-            }
-        }
-
-        // todolist(<ul>)에 item(<li>) 추가
-        // todoList.append(item)
-        console.log(findChkIdx())
-        todoList.insertBefore(item, todoList.children[findChkIdx()])
 
         // -[func]todoItem localStorage 삭제 함수
         const removeTodo = (idx) => {
@@ -119,10 +105,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // -[event]todoItem(li태그) 개별 삭제
         removeBtn.addEventListener('click', (e) => {
-            const removeItem = findParentNode(e.target, 'LI')
-            const idx = getIndex(removeItem)
-            // localStorage에서 삭제
-            removeTodo(idx)
+            const removeItem = findLINode(e.target)
+            const removeIdx = getIndex(e.target)
+            // localStorage 삭제
+            removeTodo(removeIdx)
             // 노드 삭제
             todoList.removeChild(removeItem)
             // todo Count
@@ -132,34 +118,34 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // -[event]checkbox check 이벤트
         chkInput.addEventListener('change', (e) => {
-            const eventTarget = findParentNode(e.target, 'LI')
-            const idx = getIndex(eventTarget)
+            console.log(e.target)
+            const idx = getIndex(e.target)
             const todoData = getTodoData()
             // text 스타일 변경
             text.className = e.target.checked ? 'todo-text-done' : 'todo-text'
             // 체크 상태 true <-> false 전환
             todoData[idx].checked = !todoData[idx].checked
-            // checked:true - 리스트 맨 하단으로 이동, checked:false - 미체크 항목 중 마지막 위치로
+            // if[checked:true] - 리스트 맨 하단으로 이동, else[checked:false] - 첫번째 체크 항목 위로 이동
             if (todoData[idx].checked) {
                 // Node 이동
                 todoList.append(todoList.removeChild(todoList.children[idx]))
                 // localStorage 값 이동
                 todoData.push(...todoData.splice(idx, 1))
             } else {
-                // 첫번째 체크 항목 인덱스 찾기
-                function findChkIdx () {
-                    for (let i = 0; i < todoData.length; i++) {
-                        if (todoData[i].checked) return i
+                const firstChkIdx = todoData.findIndex(todo => todo.checked === true)
+                if (idx !== (firstChkIdx - 1)) {
+                    // Node 이동
+                    todoList.insertBefore(todoList.removeChild(todoList.children[idx]), todoList.children[firstChkIdx] ?? null)
+                    if (firstChkIdx !== -1) {
+                        // localStorage 값 이동
+                        todoData.splice(firstChkIdx, 0, ...todoData.splice(idx, 1))
                     }
                 }
-                // Node 이동
-                const firstChkIdx = findChkIdx()
-                if ((idx + 1) !== firstChkIdx) todoList.insertBefore(todoList.removeChild(todoList.children[idx]), todoList.children[firstChkIdx])
-                // localStorage 값 이동
-                if ((idx + 1) !== firstChkIdx && firstChkIdx !== undefined) todoData.splice(firstChkIdx, 0, ...todoData.splice(idx, 1))
             }
             setTodoData(todoData)
         })
+
+        return item
     }
 
     // [func]처음 로딩시 localStorage 데이터 불러오기
@@ -170,7 +156,7 @@ document.addEventListener('DOMContentLoaded', () => {
             todoList.append(noItemMsg)
         } else {
             const todoArr = JSON.parse(localStorage.getItem('todo-data'))
-            todoArr.forEach(todoObj => createTodoItem(todoObj))
+            todoArr.forEach(todoObj => todoList.append(createTodoItem(todoObj)))
         }
     })()
 
@@ -189,17 +175,20 @@ document.addEventListener('DOMContentLoaded', () => {
         const todoObj = new Todo(todoText)
 
         // localStorage 데이터 저장
-        const todoArr = getTodoData()
-        todoArr.push(todoObj)
-        setTodoData(todoArr)
+        const todoData = getTodoData()
+        // 첫번째 checked === true 요소 앞으로 추가
+        let insertIdx = todoData.findIndex(todo => todo.checked === true)
+        if (insertIdx === -1) insertIdx = todoList.childElementCount
+        todoData.splice(insertIdx, 0, todoObj)
+        setTodoData(todoData)
 
-        // todoItem(li태그) 생성 함수 호출
-        createTodoItem(todoObj)
+        // todoItem(li태그) 생성 후 추가
+        todoList.insertBefore(createTodoItem(todoObj), todoList.children[insertIdx])
 
         // todoItem 추가 후 입력창 초기화
         inputTodo.value = null
 
-        // li태그 개수 세기
+        // todo Count
         const todoCnt = document.getElementsByTagName('li').length
         if (todoCnt === 1) todoList.removeChild(noItemMsg)
     }
@@ -215,9 +204,10 @@ document.addEventListener('DOMContentLoaded', () => {
         while (todoList.hasChildNodes()) {
             todoList.removeChild(todoList.firstChild)
         }
-        // 빈 배열 초기화
+        // 빈 배열로 초기화
         setTodoData([])
         todoList.append(noItemMsg)
+        chkSort.checked = false
     })
 
     // ----------------------------------------------------//
@@ -229,30 +219,26 @@ document.addEventListener('DOMContentLoaded', () => {
     // [func]모달 열기
     const openModal = (e) => {
         editModal.style.display = 'flex'
-
         // localStorage txt 값 가져와서 input창에 보여주기
-        const eventTarget = findParentNode(e.target, 'LI')
-        const idx = getIndex(eventTarget)
+        const idx = getIndex(e.target)
         const targetObj = getTodoData()[idx]
-
         editInput.value = targetObj.txt
-
-        // 수정중인 아이템 인덱스값 세션에 저장
+        // 수정 아이템 인덱스값 세션에 저장
         sessionStorage.setItem('edit', idx)
     }
 
     // [func]모달 닫기
-    function closeModal () {
+    const closeModal = () => {
         editModal.style.display = 'none'
     }
 
     // [func]todo 수정 업데이트
     const updateTodo = () => {
-        // 현재 수정 대상 데이터 가져오기
+        // 수정 데이터 가져오기
         const editIdx = sessionStorage.getItem('edit')
-        const todoData = getTodoData()
         const editItem = todoList.children[editIdx]
         const editTxt = editItem.firstChild.children[1]
+        const todoData = getTodoData()
 
         // localStorage 변경된 값 저장
         todoData[editIdx].txt = editInput.value
@@ -261,7 +247,6 @@ document.addEventListener('DOMContentLoaded', () => {
         // span태그 text 변경
         editTxt.textContent = editInput.value
 
-        // 모달창 닫기
         closeModal()
     }
 
@@ -292,12 +277,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // [func]drop : 데이터 순서 정렬
     function onDrop (e) {
         const idx = Number(e.dataTransfer.getData('idx'))
-        const dropIdx = getIndex(findParentNode(e.target, 'LI'))
-        if (dropIdx === todoList.childElementCount) {
-            todoList.append(todoList.children[idx])
-        } else {
-            todoList.insertBefore(todoList.children[idx], todoList.children[dropIdx])
-        }
+        // **dropzone이 ul태그일 때 에러처리
+        const dropIdx = getIndex(e.target)
+        todoList.insertBefore(todoList.children[idx], todoList.children[dropIdx])
 
         // localStorage 데이터 교환
         const todoData = getTodoData()
@@ -327,25 +309,37 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     const todoItems = document.getElementsByTagName('li')
-    const chkSort = document.querySelector('.sort-check')
 
     // [event]수동 정렬 상태 전환(체크박스)
     chkSort.addEventListener('change', (e) => {
-        const status = !!e.target.checked
+        const sortMode = !!e.target.checked
+        console.log(sortMode)
         const removeBtns = document.querySelectorAll('.btn-remove')
         const sortIcons = document.querySelectorAll('.fa-sort')
 
         // drag 가능<->불가능 상태 전환
+        const firstChkIdx = getTodoData().findIndex(todo => todo.checked === true)
         for (const child of todoList.childNodes) {
-            child.setAttribute('draggable', status)
+            if (getIndex(child) === firstChkIdx) return
+            child.setAttribute('draggable', sortMode)
         }
+
+        // 여기
+        // const firstChkIdx = getTodoData().findIndex(todo => todo.checked === true)
+        // console.log(firstChkIdx)
+        // for (const child of todoList.childNodes) {
+        //     child.setAttribute('draggable', sortMode)
+        // }
+
+        // addBtn 활성<->비활성화
+        sortMode ? addBtn.setAttribute('disabled', '') : addBtn.removeAttribute('disabled')
 
         // 수동정렬 상태일 때 휴지통 아이콘 -> 정렬 아이콘
         removeBtns.forEach(function (btn) {
-            btn.style.display = status ? 'none' : 'flex'
+            btn.style.display = sortMode ? 'none' : 'flex'
         })
         sortIcons.forEach(function (icon) {
-            icon.style.display = status ? 'flex' : 'none'
+            icon.style.display = sortMode ? 'flex' : 'none'
         })
     })
 

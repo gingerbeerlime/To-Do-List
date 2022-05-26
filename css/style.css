@@ -170,6 +170,9 @@ main {
     white-space: nowrap;
     text-overflow: ellipsis;
 }
+.todo-text {
+    color: #000;
+}
 /* todo 체크시 스타일 */
 .todo-text-done {
     text-decoration: line-through;
