@@ -313,7 +313,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // [event]수동 정렬 상태 전환(체크박스)
     chkSort.addEventListener('change', (e) => {
         const sortMode = !!e.target.checked
-        console.log(sortMode)
         const removeBtns = document.querySelectorAll('.btn-remove')
         const sortIcons = document.querySelectorAll('.fa-sort')
 
@@ -324,22 +323,16 @@ document.addEventListener('DOMContentLoaded', () => {
             child.setAttribute('draggable', sortMode)
         }
 
-        // 여기
-        // const firstChkIdx = getTodoData().findIndex(todo => todo.checked === true)
-        // console.log(firstChkIdx)
-        // for (const child of todoList.childNodes) {
-        //     child.setAttribute('draggable', sortMode)
-        // }
-
         // addBtn 활성<->비활성화
-        sortMode ? addBtn.setAttribute('disabled', '') : addBtn.removeAttribute('disabled')
+        if (sortMode) addBtn.setAttribute('disabled', '')
+        else addBtn.removeAttribute('disabled')
 
         // 수동정렬 상태일 때 휴지통 아이콘 -> 정렬 아이콘
         removeBtns.forEach(function (btn) {
-            btn.style.display = sortMode ? 'none' : 'flex'
+            btn.style.display = (sortMode) ? 'none' : 'flex'
         })
         sortIcons.forEach(function (icon) {
-            icon.style.display = sortMode ? 'flex' : 'none'
+            icon.style.display = (sortMode) ? 'flex' : 'none'
         })
     })
 
