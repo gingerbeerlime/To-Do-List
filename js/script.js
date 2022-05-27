@@ -3,7 +3,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const addBtn = document.querySelector('.btn-add')
     const todoList = document.querySelector('.todo-list')
     const clearAllBtn = document.querySelector('.btn-clear-all')
-    const chkSort = document.querySelector('.sort-check')
 
     // todolist 비었을 때 msg
     const noItemMsg = document.createElement('p')
@@ -84,15 +83,13 @@ document.addEventListener('DOMContentLoaded', () => {
         removeBtn.classList.add('btn-remove')
 
         // sortIcon 조작
-        sortIcon.style.display = 'none'
-        sortIcon.className = 'fa-solid fa-sort'
+        sortIcon.className = 'fa-solid fa-sort icon-sort'
 
         // wrapper(div태그) 조작
         wrapper.append(chkLbl, text, removeBtn, sortIcon)
         wrapper.classList.add('todo-wrap')
 
         // item(li태그) 조작
-        item.setAttribute('draggable', false)
         item.append(wrapper)
         item.classList.add('todo-item')
 
@@ -118,7 +115,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // -[event]checkbox check 이벤트
         chkInput.addEventListener('change', (e) => {
-            console.log(e.target)
             const idx = getIndex(e.target)
             const todoData = getTodoData()
             // text 스타일 변경
@@ -207,7 +203,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // 빈 배열로 초기화
         setTodoData([])
         todoList.append(noItemMsg)
-        chkSort.checked = false
+        document.getElementById('switch').checked = false
     })
 
     // ----------------------------------------------------//
@@ -264,23 +260,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // [func]drag start : 이동시킬 데이터 저장
     function onDragStart (e) {
+        console.log(e.target)
         e.dataTransfer.setData('idx', getIndex(e.target))
         const todoWrap = e.currentTarget.firstChild
-        // <div>wrapper</div>
         todoWrap.style.backgroundColor = '#588b8d'
-        // <span>text</span>
         todoWrap.children[1].style.color = 'white'
-        // <i>sort icon</i>
         todoWrap.children[3].style.color = 'white'
     }
 
-    // [func]drop : 데이터 순서 정렬
+    // [func]drop : 데이터 순서 바꾸기
     function onDrop (e) {
         const idx = Number(e.dataTransfer.getData('idx'))
-        // **dropzone이 ul태그일 때 에러처리
-        const dropIdx = getIndex(e.target)
+        const firstChkIdx = getTodoData().findIndex(todo => todo.checked === true)
+        let dropIdx = getIndex(e.target)
+        if (firstChkIdx !== -1 && dropIdx >= firstChkIdx) dropIdx = firstChkIdx
+        // Node 이동
         todoList.insertBefore(todoList.children[idx], todoList.children[dropIdx])
-
         // localStorage 데이터 교환
         const todoData = getTodoData()
         const dragData = todoData.slice(idx, idx + 1)
@@ -309,31 +304,41 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     const todoItems = document.getElementsByTagName('li')
+    const chkSort = document.querySelector('.sort-check')
 
     // [event]수동 정렬 상태 전환(체크박스)
     chkSort.addEventListener('change', (e) => {
         const sortMode = !!e.target.checked
         const removeBtns = document.querySelectorAll('.btn-remove')
-        const sortIcons = document.querySelectorAll('.fa-sort')
+        const sortIcons = document.querySelectorAll('.icon-sort')
+        const chkTodo = document.querySelectorAll('.check-todo')
 
-        // drag 가능<->불가능 상태 전환
-        const firstChkIdx = getTodoData().findIndex(todo => todo.checked === true)
+        // draggable true <-> false 전환
         for (const child of todoList.childNodes) {
-            if (getIndex(child) === firstChkIdx) return
-            child.setAttribute('draggable', sortMode)
+            const chkBox = child.querySelector('.check-todo')
+            if (sortMode) {
+                if (!chkBox.checked) child.setAttribute('draggable', 'true')
+            } else {
+                if (!chkBox.checked) child.removeAttribute('draggable')
+            }
         }
-
-        // addBtn 활성<->비활성화
-        if (sortMode) addBtn.setAttribute('disabled', '')
-        else addBtn.removeAttribute('disabled')
-
-        // 수동정렬 상태일 때 휴지통 아이콘 -> 정렬 아이콘
+        // 정렬 상태일 때 휴지통 아이콘 -> 정렬 아이콘
         removeBtns.forEach(function (btn) {
-            btn.style.display = (sortMode) ? 'none' : 'flex'
+            btn.style.display = sortMode ? 'none' : 'flex'
         })
         sortIcons.forEach(function (icon) {
-            icon.style.display = (sortMode) ? 'flex' : 'none'
+            icon.style.display = sortMode ? 'flex' : 'none'
         })
+        // addBtn 활성 <-> 비활성화
+        if (sortMode) {
+            addBtn.setAttribute('disabled', '')
+            chkTodo.forEach(chk => chk.setAttribute('disabled', ''))
+            inputTodo.setAttribute('disabled', '')
+        } else {
+            addBtn.removeAttribute('disabled')
+            chkTodo.forEach(chk => chk.removeAttribute('disabled'))
+            inputTodo.removeAttribute('disabled')
+        }
     })
 
     // [event]dragevent 함수 연결

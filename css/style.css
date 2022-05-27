@@ -192,11 +192,10 @@ main {
     cursor: pointer;
 }
 /* todo 정렬 버튼 */
-.todo-list .fa-sort {
+.todo-list .icon-sort {
     width: 40px;
     height: 40px;
     margin-left: auto;
-    display: flex;
     justify-content: center;
     align-items: center;
     color: #588b8d;
