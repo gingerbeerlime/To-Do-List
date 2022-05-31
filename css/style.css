@@ -13,6 +13,12 @@
     font-weight: normal;
     font-style: normal;
 }
+:root {
+    --color-text-checked : #8f959b;
+    --color-text-default : #000;
+    --color-point : #588b8d;
+    --color-divbox-default : #c2e0d8;
+}
 * {
     font-family: 'GangwonEdu_OTFBoldA';
 }
@@ -126,7 +132,7 @@ main {
     border-radius: 15px;
     display: flex;
     align-items: center;
-    background-color: #c2e0d8de;
+    background-color: var(--color-divbox-default);
 }
 /* 체크박스 */
 .check-todo {
@@ -176,7 +182,7 @@ main {
 /* todo 체크시 스타일 */
 .todo-text-done {
     text-decoration: line-through;
-    color: #8f959b;
+    color: var(--color-text-checked);
 }
 /* todo 개별 삭제 버튼 */
 .btn-remove {
@@ -198,7 +204,7 @@ main {
     margin-left: auto;
     justify-content: center;
     align-items: center;
-    color: #588b8d;
+    color: var(--color-point);
     display: none;
 }
 /* todolist 비어있을 때 msg */
