@@ -13,14 +13,14 @@
     font-weight: normal;
     font-style: normal;
 }
+* {
+    font-family: 'GangwonEdu_OTFBoldA';
+}
 :root {
     --color-text-checked : #8f959b;
     --color-text-default : #000;
     --color-point : #588b8d;
     --color-divbox-default : #c2e0d8;
-}
-* {
-    font-family: 'GangwonEdu_OTFBoldA';
 }
 #wrap {
     margin: 0;
@@ -177,9 +177,11 @@ main {
     text-overflow: ellipsis;
 }
 .todo-text {
-    color: #000;
+    color: var(--color-text-default);
 }
-/* todo 체크시 스타일 */
+.todo-text.ondrag {
+    color: #fff;
+}
 .todo-text-done {
     text-decoration: line-through;
     color: var(--color-text-checked);

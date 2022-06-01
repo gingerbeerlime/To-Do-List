@@ -7,8 +7,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const cssRoot = document.querySelector(':root')
     const commonStyle = window.getComputedStyle(cssRoot)
-    const textColorChecked = commonStyle.getPropertyValue('--color-text-checked')
-    const textColorDefault = commonStyle.getPropertyValue('--color-text-default')
     const pointColor = commonStyle.getPropertyValue('--color-point')
     const divColorDefault = commonStyle.getPropertyValue('--color-divbox-default')
 
@@ -43,10 +41,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const getIndex = (eTarget) => {
         const todoItems = document.querySelectorAll('li')
+        // ul drop 에러 처리
         const targetLI = eTarget.tagName === 'LI' ? eTarget : findParentLINode(eTarget)
         const idx = [...todoItems].findIndex(item => item === targetLI)
         return idx
     }
+
+    const countTodoItem = () => document.getElementsByTagName('LI').length
 
     // @param todoObj <object> { txt : todo내용, checked : true/false(default) }
     const createTodoItem = (todoObj) => {
@@ -107,7 +108,8 @@ document.addEventListener('DOMContentLoaded', () => {
             } else {
                 const firstCheckedIdx = todoData.findIndex(todo => todo.checked === true)
                 if (checkedIdx !== (firstCheckedIdx - 1)) {
-                    todoList.insertBefore(todoList.removeChild(todoList.children[checkedIdx]), todoList.children[firstCheckedIdx] ?? null)
+                    const checkedTodo = todoList.removeChild(todoList.children[checkedIdx])
+                    todoList.insertBefore(checkedTodo, todoList.children[firstCheckedIdx] ?? null)
                 }
                 if (checkedIdx !== (firstCheckedIdx - 1) && firstCheckedIdx !== -1) {
                     todoData.splice(firstCheckedIdx, 0, ...todoData.splice(checkedIdx, 1))
@@ -119,8 +121,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // [event]
         removeButton.addEventListener('click', (e) => {
             removeTodo(getIndex(e.target))
-            const todoCount = document.getElementsByTagName('LI').length
-            if (todoCount === 0) todoList.append(emptyListMessage)
+            if (countTodoItem() === 0) todoList.append(emptyListMessage)
         })
 
         checkboxInput.addEventListener('change', (e) => {
@@ -152,8 +153,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         todoInput.value = null
 
-        const todoCount = document.getElementsByTagName('li').length
-        if (todoCount === 1) todoList.removeChild(emptyListMessage)
+        if (countTodoItem() === 1) todoList.removeChild(emptyListMessage)
     }
 
     (function loadTodo () {
@@ -234,8 +234,8 @@ document.addEventListener('DOMContentLoaded', () => {
         e.dataTransfer.setData('idx', getIndex(e.target))
         const todoBox = e.currentTarget.querySelector('.todo-box')
         todoBox.style.backgroundColor = pointColor
-        todoBox.querySelector('.todo-text').style.color = 'white'
-        todoBox.querySelector('.icon-sort').style.color = 'white'
+        todoBox.querySelector('.todo-text').classList.add('drag')
+        todoBox.querySelector('.icon-sort').style.color = '#fff'
     }
 
     function onDrop (e) {
@@ -261,7 +261,7 @@ document.addEventListener('DOMContentLoaded', () => {
         todoBox.style.backgroundColor = divColorDefault
         todoBox.querySelector('.icon-sort').style.color = pointColor
         // element.style에 #000값이 들어가는 오류 해결하기
-        todoBox.querySelector('.todo-text').style.color = textColorDefault
+        todoBox.querySelector('.todo-text').classList.remove('drag')
     }
 
     // [event]
@@ -288,13 +288,13 @@ document.addEventListener('DOMContentLoaded', () => {
         })
 
         if (sortMode) {
-            addButton.setAttribute('disabled', '')
             checkBoxes.forEach(checkBox => checkBox.setAttribute('disabled', ''))
             todoInput.setAttribute('disabled', '')
+            addButton.setAttribute('disabled', '')
         } else {
-            addButton.removeAttribute('disabled')
             checkBoxes.forEach(checkBox => checkBox.removeAttribute('disabled'))
             todoInput.removeAttribute('disabled')
+            addButton.removeAttribute('disabled')
         }
     })
 
@@ -302,6 +302,7 @@ document.addEventListener('DOMContentLoaded', () => {
         e.preventDefault()
     }, false)
     todoList.addEventListener('drop', onDrop)
+    // ----------------------------------------------------//
 
     window.addEventListener('storage', () => {
         getTodoData() ?? setTodoData([])
