@@ -1,9 +1,12 @@
-
 document.addEventListener('DOMContentLoaded', () => {
     const todoInput = document.querySelector('.input-todo')
     const addButton = document.querySelector('.btn-add')
     const todoList = document.querySelector('.todo-list')
     const clearAllButton = document.querySelector('.btn-clear-all')
+    const editModal = document.querySelector('.modal-wrap')
+    const editInput = document.querySelector('.input-edit')
+    const editUpdateButton = document.querySelector('.btn-update')
+    const sortSwitch = document.getElementById('input-sort')
 
     const cssRoot = document.querySelector(':root')
     const commonStyle = window.getComputedStyle(cssRoot)
@@ -14,7 +17,8 @@ document.addEventListener('DOMContentLoaded', () => {
     emptyListMessage.textContent = 'To Do List가 비어있습니다.'
     emptyListMessage.classList.add('empty-todo')
 
-    // [class]localStorage value값<object> 생성 클래스
+    // <CLASS>
+    // localStorage value값<object> 생성 클래스
     class Todo {
         constructor (txt) {
             this.txt = txt
@@ -22,7 +26,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // [function]
+    // <FUNCTIONS>
     const getTodoData = () => {
         return JSON.parse(localStorage.getItem('todo-data'))
     }
@@ -49,6 +53,41 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const countTodoItem = () => document.getElementsByTagName('LI').length
 
+    // -- drag and drop
+    const onDragStart = (e) => {
+        e.dataTransfer.setData('idx', getIndex(e.target))
+        const todoBox = e.currentTarget.querySelector('.todo-box')
+        todoBox.style.backgroundColor = pointColor
+        todoBox.querySelector('.todo-text').classList.add('ondrag')
+        todoBox.querySelector('.icon-sort').style.color = '#fff'
+    }
+
+    const onDrop = (e) => {
+        const dragIdx = Number(e.dataTransfer.getData('idx'))
+        const firstCheckedIdx = getTodoData().findIndex(todo => todo.checked === true)
+        let dropIdx = getIndex(e.target)
+        if (firstCheckedIdx !== -1 && dropIdx >= firstCheckedIdx) dropIdx = firstCheckedIdx
+
+        todoList.insertBefore(todoList.children[dragIdx], todoList.children[dropIdx])
+
+        const todoData = getTodoData()
+        const dragData = todoData.slice(dragIdx, dragIdx + 1)
+        todoData.splice(dropIdx, 0, ...dragData)
+        if (dragIdx === dropIdx) return
+        else todoData.splice(dragIdx + (dragIdx > dropIdx ? 1 : 0), 1)
+        setTodoData(todoData)
+
+        e.dataTransfer.clearData()
+    }
+
+    const onDragEnd = (e) => {
+        const todoBox = e.currentTarget.querySelector('.todo-box')
+        todoBox.style.backgroundColor = divColorDefault
+        todoBox.querySelector('.todo-text').classList.remove('ondrag')
+        todoBox.querySelector('.icon-sort').style.color = pointColor
+    }
+
+    // -- add & remove Todo
     // @param todoObj <object> { txt : todo내용, checked : true/false(default) }
     const createTodoItem = (todoObj) => {
         const todoItem = document.createElement('li')
@@ -91,7 +130,7 @@ document.addEventListener('DOMContentLoaded', () => {
         todoItem.addEventListener('dragstart', onDragStart)
         todoItem.addEventListener('dragend', onDragEnd)
 
-        // [function]
+        // [functions]
         const removeTodo = (removeIdx) => {
             const todoData = getTodoData()
             const newTodoData = todoData.filter((_, idx) => idx !== removeIdx)
@@ -118,7 +157,7 @@ document.addEventListener('DOMContentLoaded', () => {
             setTodoData(todoData)
         }
 
-        // [event]
+        // [events]
         removeButton.addEventListener('click', (e) => {
             removeTodo(getIndex(e.target))
             if (countTodoItem() === 0) todoList.append(emptyListMessage)
@@ -167,38 +206,16 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     })()
 
-    // [event]
-    addButton.addEventListener('click', addTodo)
-    todoInput.addEventListener('keyup', (e) => {
-        if (e.keyCode === 13) addTodo()
-    })
-
-    clearAllButton.addEventListener('click', () => {
-        while (todoList.hasChildNodes()) {
-            todoList.removeChild(todoList.firstChild)
-        }
-        setTodoData([])
-        todoList.append(emptyListMessage)
-        document.getElementById('sort-switch').checked = false
-    })
-
-    // ----------------------------------------------------//
-    // todo 수정
-    const editModal = document.querySelector('.modal-wrap')
-    const editInput = document.querySelector('.input-edit')
-    const editUpdateButton = document.querySelector('.btn-update')
-
-    // [function]
-    const openModal = (e) => {
+    // -- edit Todo
+    const openEditModal = (e) => {
         editModal.style.display = 'flex'
         const idx = getIndex(e.target)
         const editTodoData = getTodoData()[idx]
         editInput.value = editTodoData.txt
-        // 수정 아이템 인덱스값 세션에 저장
         sessionStorage.setItem('edit', idx)
     }
 
-    const updateTodo = () => {
+    const updateEditTodo = () => {
         const editIdx = sessionStorage.getItem('edit')
         const editItem = todoList.children[editIdx]
         const editTxt = editItem.querySelector('.todo-text')
@@ -209,62 +226,39 @@ document.addEventListener('DOMContentLoaded', () => {
 
         editTxt.textContent = editInput.value
 
-        closeModal()
+        closeEditModal()
     }
 
-    const closeModal = () => {
+    const closeEditModal = () => {
         editModal.style.display = 'none'
     }
 
-    todoList.addEventListener('dblclick', openModal)
-    editUpdateButton.addEventListener('click', updateTodo)
+    // <EVENTS>
+    // -- add & remove event
+    addButton.addEventListener('click', addTodo)
+    todoInput.addEventListener('keyup', (e) => {
+        if (e.keyCode === 13) addTodo()
+    })
+    clearAllButton.addEventListener('click', () => {
+        while (todoList.hasChildNodes()) {
+            todoList.removeChild(todoList.firstChild)
+        }
+        setTodoData([])
+        todoList.append(emptyListMessage)
+        document.getElementById('sort-switch').checked = false
+    })
+
+    // -- edit event
+    todoList.addEventListener('dblclick', openEditModal)
+    editUpdateButton.addEventListener('click', updateEditTodo)
     editInput.addEventListener('keyup', (e) => {
-        if (e.keyCode === 13) updateTodo()
+        if (e.keyCode === 13) updateEditTodo()
     })
     editModal.addEventListener('click', (e) => {
-        if (e.target.className === 'modal-wrap') closeModal()
+        if (e.target.className === 'modal-wrap') closeEditModal()
     })
 
-    // ----------------------------------------------------//
-    // drag and drop(todo 순서 바꾸기)
-    const sortSwitch = document.getElementById('input-sort')
-
-    // [function]
-    function onDragStart (e) {
-        e.dataTransfer.setData('idx', getIndex(e.target))
-        const todoBox = e.currentTarget.querySelector('.todo-box')
-        todoBox.style.backgroundColor = pointColor
-        todoBox.querySelector('.todo-text').classList.add('drag')
-        todoBox.querySelector('.icon-sort').style.color = '#fff'
-    }
-
-    function onDrop (e) {
-        const dragIdx = Number(e.dataTransfer.getData('idx'))
-        const firstCheckedIdx = getTodoData().findIndex(todo => todo.checked === true)
-        let dropIdx = getIndex(e.target)
-        if (firstCheckedIdx !== -1 && dropIdx >= firstCheckedIdx) dropIdx = firstCheckedIdx
-
-        todoList.insertBefore(todoList.children[dragIdx], todoList.children[dropIdx])
-
-        const todoData = getTodoData()
-        const dragData = todoData.slice(dragIdx, dragIdx + 1)
-        todoData.splice(dropIdx, 0, ...dragData)
-        if (dragIdx === dropIdx) return
-        else todoData.splice(dragIdx + (dragIdx > dropIdx ? 1 : 0), 1)
-        setTodoData(todoData)
-
-        e.dataTransfer.clearData()
-    }
-
-    function onDragEnd (e) {
-        const todoBox = e.currentTarget.querySelector('.todo-box')
-        todoBox.style.backgroundColor = divColorDefault
-        todoBox.querySelector('.icon-sort').style.color = pointColor
-        // element.style에 #000값이 들어가는 오류 해결하기
-        todoBox.querySelector('.todo-text').classList.remove('drag')
-    }
-
-    // [event]
+    // -- drag and drop(sort) event
     sortSwitch.addEventListener('change', (e) => {
         const sortMode = !!e.target.checked
         const removeButtons = document.querySelectorAll('.btn-remove')
@@ -297,13 +291,12 @@ document.addEventListener('DOMContentLoaded', () => {
             addButton.removeAttribute('disabled')
         }
     })
-
     todoList.addEventListener('dragover', function (e) {
         e.preventDefault()
     }, false)
     todoList.addEventListener('drop', onDrop)
-    // ----------------------------------------------------//
 
+    // -- storage event
     window.addEventListener('storage', () => {
         getTodoData() ?? setTodoData([])
         if (getTodoData().length === 0 && todoList.hasChildNodes()) {
