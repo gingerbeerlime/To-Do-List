@@ -1,4 +1,3 @@
 **코드 리뷰 수정사항
 5. js 파일 분리 (ui컴포넌트별 or 기능별)
-7. webpack 설정 - babel 라이브러리 / webpack dev server / webpack cli > init > 선택값 
 8. readme 작성 : 프로젝트 설명(기능 구현 리스트, 애플리케이션 설명, 설계)

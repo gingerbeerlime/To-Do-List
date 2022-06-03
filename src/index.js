@@ -1,3 +1,12 @@
+import './assets/reset.css'
+import './assets/style.css'
+import './assets/mediaqueries.css'
+// import { sayHi, sayBye } from './drag-drop-todo.js'
+// import dragAndDrop from './drag-drop-todo.js'
+
+// console.log(dragAndDrop.sayHi('수민'))
+// console.log(dragAndDrop.sayBye('수민'))
+
 document.addEventListener('DOMContentLoaded', () => {
     const todoInput = document.querySelector('.input-todo')
     const addButton = document.querySelector('.btn-add')
