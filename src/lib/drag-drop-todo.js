@@ -1,5 +1,5 @@
-import { todoList, pointColor, divColorDefault } from './common-variables'
-import { getTodoData, setTodoData, getIndex } from './common-functions'
+import { todoList, pointColor, divColorDefault } from './public-variables'
+import { getTodoData, setTodoData, getIndex } from './public-functions'
 
 const onDragStart = (e) => {
     e.dataTransfer.setData('idx', getIndex(e.target))

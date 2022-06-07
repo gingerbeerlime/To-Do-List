@@ -1,15 +1,30 @@
-# 🚀 Welcome to your new awesome project!
+# 🚀 To Do List!
 
-This project has been created using **webpack-cli**, you can now run
+할 일 목록을 관리하는 어플리케이션 개발
 
+![demo.png](./demo.PNG)
+
+## Getting Started
+
+### Installing a development environment
+
+```bash
+# Install
+npm install
 ```
-npm run build
+
+### Run the project
+
+```bash
+# Install
+npm install -g live-server
+
+# Serve
+live-server
 ```
 
-or
+Open browser to <http://localhost:8080/>
 
-```
-yarn build
-```
+## License
 
-to bundle your application
+MIT

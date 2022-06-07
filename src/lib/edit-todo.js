@@ -1,5 +1,5 @@
-import { todoList } from './common-variables'
-import { getTodoData, setTodoData, getIndex } from './common-functions'
+import { todoList } from './public-variables'
+import { getTodoData, setTodoData, getIndex } from './public-functions'
 
 export const editModal = document.querySelector('.modal-wrap')
 export const editInput = document.querySelector('.input-edit')

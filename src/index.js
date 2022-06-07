@@ -2,11 +2,11 @@ import './assets/reset.css'
 import './assets/style.css'
 import './assets/mediaqueries.css'
 
-import { todoList, todoInput, addButton, sortSwitch, clearAllButton, emptyListMessage } from './public-variables'
-import { getTodoData, setTodoData } from './public-functions'
-import { onDrop } from './drag-drop-todo'
-import { openEditModal, updateEditTodo, closeEditModal, editModal, editInput, editUpdateButton } from './edit-todo'
-import { createTodoItem, addTodo } from './add-remove-todo'
+import { todoList, todoInput, addButton, sortSwitch, clearAllButton, emptyListMessage } from './lib/public-variables'
+import { getTodoData, setTodoData } from './lib/public-functions'
+import { onDrop } from './lib/drag-drop-todo'
+import { openEditModal, updateEditTodo, closeEditModal, editModal, editInput, editUpdateButton } from './lib/edit-todo'
+import { createTodoItem, addTodo } from './lib/add-remove-todo'
 
 (function loadTodo () {
     localStorage.getItem('todo-data') ?? localStorage.setItem('todo-data', JSON.stringify([]))

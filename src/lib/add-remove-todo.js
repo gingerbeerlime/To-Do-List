@@ -1,8 +1,7 @@
-import { todoList, todoInput, emptyListMessage } from './common-variables'
-import { getTodoData, setTodoData, getIndex, countTodoItem } from './common-functions'
+import { todoList, todoInput, emptyListMessage } from './public-variables'
+import { getTodoData, setTodoData, getIndex, countTodoItem } from './public-functions'
 import { onDragStart, onDragEnd } from './drag-drop-todo'
 
-// <CLASS>
 // localStorage value값<object> 생성 클래스
 class Todo {
     constructor (txt) {
@@ -10,7 +9,7 @@ class Todo {
         this.checked = false
     }
 }
-// <FUNCTIONS>
+
 // @param todoObj <object> { txt : todo내용, checked : true/false(default) }
 const createTodoItem = (todoObj) => {
     const todoItem = document.createElement('li')
@@ -69,11 +68,12 @@ const createTodoItem = (todoObj) => {
             todoData.push(...todoData.splice(checkedIdx, 1))
         } else {
             const firstCheckedIdx = todoData.findIndex(todo => todo.checked === true)
-            // 체크해제된 투두 인덱스가 첫번째 체크항목이 아닐 때
+            // 이벤트타겟이 첫번째 체크항목 상단으로 이동되는 조건
             if (checkedIdx !== (firstCheckedIdx - 1)) {
                 const checkedTodo = todoList.removeChild(todoList.children[checkedIdx])
                 todoList.insertBefore(checkedTodo, todoList.children[firstCheckedIdx] ?? null)
             }
+            // localStorage 배열을 재정렬시켜야하는 조건
             if (checkedIdx !== (firstCheckedIdx - 1) && firstCheckedIdx !== -1) {
                 todoData.splice(firstCheckedIdx, 0, ...todoData.splice(checkedIdx, 1))
             }
