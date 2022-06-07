@@ -2,8 +2,8 @@ import './assets/reset.css'
 import './assets/style.css'
 import './assets/mediaqueries.css'
 
-import { todoList, todoInput, addButton, sortSwitch, clearAllButton, emptyListMessage } from './common-variables'
-import { getTodoData, setTodoData } from './common-functions'
+import { todoList, todoInput, addButton, sortSwitch, clearAllButton, emptyListMessage } from './public-variables'
+import { getTodoData, setTodoData } from './public-functions'
 import { onDrop } from './drag-drop-todo'
 import { openEditModal, updateEditTodo, closeEditModal, editModal, editInput, editUpdateButton } from './edit-todo'
 import { createTodoItem, addTodo } from './add-remove-todo'
@@ -20,7 +20,7 @@ import { createTodoItem, addTodo } from './add-remove-todo'
 })()
 
 // <EVENTS>
-// add/remove event
+// -- add & remove event
 addButton.addEventListener('click', addTodo)
 todoInput.addEventListener('keyup', (e) => {
     if (e.keyCode === 13) addTodo()

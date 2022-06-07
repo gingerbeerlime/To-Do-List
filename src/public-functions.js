@@ -16,7 +16,6 @@ const findParentLINode = (eTarget) => {
 
 const getIndex = (eTarget) => {
     const todoItems = document.querySelectorAll('li')
-    // ul drop 에러 처리
     const targetLI = eTarget.tagName === 'LI' ? eTarget : findParentLINode(eTarget)
     const idx = [...todoItems].findIndex(item => item === targetLI)
     return idx

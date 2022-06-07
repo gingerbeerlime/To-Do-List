@@ -10,7 +10,7 @@ class Todo {
         this.checked = false
     }
 }
-// <FUNCTION>
+// <FUNCTIONS>
 // @param todoObj <object> { txt : todo내용, checked : true/false(default) }
 const createTodoItem = (todoObj) => {
     const todoItem = document.createElement('li')
@@ -69,6 +69,7 @@ const createTodoItem = (todoObj) => {
             todoData.push(...todoData.splice(checkedIdx, 1))
         } else {
             const firstCheckedIdx = todoData.findIndex(todo => todo.checked === true)
+            // 체크해제된 투두 인덱스가 첫번째 체크항목이 아닐 때
             if (checkedIdx !== (firstCheckedIdx - 1)) {
                 const checkedTodo = todoList.removeChild(todoList.children[checkedIdx])
                 todoList.insertBefore(checkedTodo, todoList.children[firstCheckedIdx] ?? null)

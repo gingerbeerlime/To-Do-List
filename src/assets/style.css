@@ -60,7 +60,7 @@ header {
     display: inline-block;
     width: 200px;
     height: 30px;
-    background-color: #FEF0D6;
+    background-color: #fef0d6;
     position: relative;
     top: -25px;
     left: 50%;
@@ -83,17 +83,17 @@ header {
     flex-grow: 3;
 }
 .input-todo:focus {
-    outline: 2px solid #E9B1AD;
+    outline: 2px solid #e9b1ad;
 }
 .btn-add {
     width: 35px;
     height: 35px;
     border-radius: 50%;
-    background-color: #E9B1AD;
+    background-color: #e9b1ad;
     margin-right: 5px;
     margin-left: 20px;
     cursor: pointer;
-    color: white;
+    color: #fff;
     font-size: 30px;
     text-align: center;
     line-height: 45px;
@@ -141,7 +141,7 @@ main {
 .check-label {
     width: 23px;
     height: 23px;
-    background-color: white;
+    background-color: #fff;
     border-radius: 50%;
     margin-left: 10px;
     display: flex;
@@ -191,12 +191,12 @@ main {
     width: 40px;
     height: 40px;
     border-radius: 0 15px 15px 0;
-    background-color: #79C0C3;
+    background-color: #79c0c3;
     margin-left: auto;
     display: flex;
     justify-content: center;
     align-items: center;
-    color: white;
+    color: #fff;
     cursor: pointer;
 }
 /* todo 정렬 버튼 */
@@ -237,7 +237,7 @@ footer {
     height: 20px;
     background-color: white;
     align-items: center;
-    border: 2px solid #C7C4CF;
+    border: 2px solid #c7c4cf;
     box-sizing: border-box;
     border-radius: 20px;
     transition: 0.2s;
@@ -252,7 +252,7 @@ footer {
     width: 14px;
     height: 14px;
     border-radius: 50%;
-    background: #C7C4CF;;
+    background: #c7c4cf;;
     transition: 0.2s;
     top: 1px;
     left: 2px;
@@ -265,12 +265,12 @@ footer {
 .sort-check:checked + .sort-label .sort-switch {
     left: 28px;
     background-color: #fff;
-    box-shadow: 1px 2px 3px #00000020;
+    box-shadow: 1px 2px 3px rgba(0, 0, 0, 0.125);
 }
 .sort-label .fa-sort {
     position: absolute;
     z-index: 100;
-    color: white;
+    color: #fff;
     top: 1.1px;
     left: 5px;
     font-size: 14px;
@@ -280,8 +280,8 @@ footer {
     width: 110px;
     height: 30px;
     border-radius: 30px;
-    background-color: #C7C4CF;
-    color: white;
+    background-color: #c7c4cf;
+    color: #fff;
     box-shadow: 0 0 2px #777;
     text-align: center;
     font-size: 21px;
@@ -308,7 +308,7 @@ footer {
 .modal {
     width: 83%;
     height: 140px;
-    background-color: white;
+    background-color: #fff;
     border-radius: 3px;
     display: flex;
     flex-direction: column;
@@ -325,19 +325,19 @@ footer {
     box-shadow: 0 0 2px inset #999;
 }
 .input-edit:focus {
-    outline: 2px solid #E9B1AD;
+    outline: 2px solid #e9b1ad;
 }
 .btn-update {
     width: 100%;
     height: 40px;
-    background-color: #E9B1AD;
+    background-color: #e9b1ad;
     display: flex;
     justify-content: center;
     cursor: pointer;
     border-radius: 0 0 3px 3px;
 }
 .btn-update > span {
-    color: white;
+    color: #fff;
     font-size: 18px;
     line-height: 48px;
 }
@@ -345,5 +345,5 @@ footer {
     font-size: 11px;
     line-height: 40px;
     padding-left: 7px;
-    color: white;
+    color: #fff;
 }
