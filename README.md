@@ -27,10 +27,12 @@ npm install
 ### Run the project
 
 ```bash
-# Install
-npm install -g live-server
+# Development
+npm run dev
 
-# Serve
+# Production
+npm run build
+cd dist
 live-server
 ```
 
