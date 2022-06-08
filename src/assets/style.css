@@ -16,6 +16,12 @@
 * {
     font-family: 'GangwonEdu_OTFBoldA';
 }
+:root {
+    --color-text-checked : #8f959b;
+    --color-text-default : #000;
+    --color-point : #588b8d;
+    --color-divbox-default : #c2e0d8;
+}
 #wrap {
     margin: 0;
     padding: 0;
@@ -23,14 +29,20 @@
 #container {
     margin: 0 auto;
     margin-top: 100px;
+    margin-bottom: 100px;
     width: 35%;
     background-color: rgb(245, 245, 245, 0.8);
     box-shadow: 1px 3px 6px #999;
     padding: 30px 30px 40px 30px;
     box-sizing: border-box;
     position: relative;
+    display: flex;
+    flex-direction: column;
 }
 /* <HEADER> */
+header {
+    width: 100%;
+}
 /* 제목 */
 .ttl {
     margin: 0 auto;
@@ -48,7 +60,7 @@
     display: inline-block;
     width: 200px;
     height: 30px;
-    background-color: #FEF0D6;
+    background-color: #fef0d6;
     position: relative;
     top: -25px;
     left: 50%;
@@ -71,17 +83,17 @@
     flex-grow: 3;
 }
 .input-todo:focus {
-    outline: 2px solid #E9B1AD;
+    outline: 2px solid #e9b1ad;
 }
 .btn-add {
     width: 35px;
     height: 35px;
     border-radius: 50%;
-    background-color: #E9B1AD;
+    background-color: #e9b1ad;
     margin-right: 5px;
     margin-left: 20px;
     cursor: pointer;
-    color: white;
+    color: #fff;
     font-size: 30px;
     text-align: center;
     line-height: 45px;
@@ -95,36 +107,48 @@
     transition: 0.2s all ease;
 }
 /* <MAIN> : TODO항목 리스트 영역 */
+main {
+    width: 100%;
+}
 /* <ul> */
 .todo-list {
     width: 100%;
     padding: 10px 0;
+    margin-bottom: 40px;
 }
 /* <li> */
 .todo-item {
     width: 100%;
-    height: 40px;
-    background-color: #c2e0d8de;
-    margin-bottom: 12px;
+    height: 54px;
+    padding: 12px 0 0 0;
+    cursor: pointer;
+    box-sizing: border-box;
+    background-color: transparent;
+}
+/* wrapper<div> */
+.todo-box {
+    width: 100%;
+    height: 42px;
     border-radius: 15px;
     display: flex;
     align-items: center;
-    cursor: pointer;
+    background-color: var(--color-divbox-default);
 }
 /* 체크박스 */
-input[type="checkbox"] {
+.check-todo {
     display: none;
 }
-label {
+.check-label {
     width: 23px;
     height: 23px;
-    background-color: white;
+    background-color: #fff;
     border-radius: 50%;
     margin-left: 10px;
     display: flex;
     justify-content: center;
     align-items: center;
     cursor: pointer;
+    box-shadow: 0 0 1px inset #999;
 }
 .check-icon {
     display: block;
@@ -136,7 +160,7 @@ label {
     top: -2px;
     border-radius: 2px;
 }
-input[type="checkbox"]:checked + .check-icon {
+.check-todo:checked + .check-icon {
     border: solid #55a3a5;
     border-width: 0 4px 4px 0;
 }
@@ -144,7 +168,7 @@ input[type="checkbox"]:checked + .check-icon {
 .todo-text,
 .todo-text-done {
     display: block;
-    max-width: 240px;
+    max-width: 170px;
     padding-left: 10px;
     position: relative;
     top: 2px;
@@ -152,26 +176,41 @@ input[type="checkbox"]:checked + .check-icon {
     white-space: nowrap;
     text-overflow: ellipsis;
 }
-/* todo 체크시 스타일 */
+.todo-text {
+    color: var(--color-text-default);
+}
+.todo-text.ondrag {
+    color: #fff;
+}
 .todo-text-done {
     text-decoration: line-through;
-    color: rgb(143, 149, 155);
+    color: var(--color-text-checked);
 }
 /* todo 개별 삭제 버튼 */
 .btn-remove {
     width: 40px;
     height: 40px;
     border-radius: 0 15px 15px 0;
-    background-color: #79C0C3;
+    background-color: #79c0c3;
     margin-left: auto;
     display: flex;
     justify-content: center;
     align-items: center;
-    color: white;
+    color: #fff;
     cursor: pointer;
 }
+/* todo 정렬 버튼 */
+.todo-list .icon-sort {
+    width: 40px;
+    height: 40px;
+    margin-left: auto;
+    justify-content: center;
+    align-items: center;
+    color: var(--color-point);
+    display: none;
+}
 /* todolist 비어있을 때 msg */
-.no-item {
+.empty-todo {
     width: 100%;
     height: 40px;
     background-color: rgb(233, 177, 173, 0.7);
@@ -183,21 +222,67 @@ input[type="checkbox"]:checked + .check-icon {
 /* <FOOTER> */
 footer {
     width: 100%;
-    height: 60px;
-    padding: 0 30px;
-    margin: 10px 0 -30px -30px;
+    height: 30px;
     display: flex;
-    justify-content: flex-end;
+    justify-content: space-between;
     align-items: center;
+    padding: 0 5px;
+    box-sizing: border-box;
+}
+/* 순서바꾸기 버튼 */
+.sort-label {
+    position: relative;
+    display: block;
+    width: 46px;
+    height: 20px;
+    background-color: white;
+    align-items: center;
+    border: 2px solid #c7c4cf;
+    box-sizing: border-box;
+    border-radius: 20px;
+    transition: 0.2s;
+    cursor: pointer;
+}
+.sort-check {
+    display: none;
+}
+.sort-switch {
+    display: block;
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: #c7c4cf;;
+    transition: 0.2s;
+    top: 1px;
+    left: 2px;
+    z-index: 200;
+}
+.sort-check:checked ~ .sort-label {
+    background-color: #55a3a5;
+    border: 2px solid #55a3a5;
+}
+.sort-check:checked + .sort-label .sort-switch {
+    left: 28px;
+    background-color: #fff;
+    box-shadow: 1px 2px 3px rgba(0, 0, 0, 0.125);
+}
+.sort-label .fa-sort {
+    position: absolute;
+    z-index: 100;
+    color: #fff;
+    top: 1.1px;
+    left: 5px;
+    font-size: 14px;
 }
 /* 초기화 버튼(todo 전체 삭제) */
 .btn-clear-all {
     width: 110px;
     height: 30px;
     border-radius: 30px;
-    background-color: #C7C4CF;
-    color: white;
-    box-shadow: 0 0 4px #999;
+    background-color: #c7c4cf;
+    color: #fff;
+    box-shadow: 0 0 2px #777;
     text-align: center;
     font-size: 21px;
     cursor: pointer;
@@ -210,7 +295,7 @@ footer {
 .modal-wrap {
     width: 100%;
     height: 100%;
-    background-color: rgb(255, 255, 255, 0.5);
+    background-color: rgb(0, 0, 0, 0.2);
     position: absolute;
     top: 0;
     left: 0;
@@ -220,53 +305,45 @@ footer {
     justify-content: center;
     align-items: center;
 }
-.icon-close {
-    display: block;
-    width: 23px;
-    height: 50px;
-    color: rgb(169, 169, 169);
-    cursor: pointer;
-}
-.fa-xmark {
-    font-size: 35px;
-}
 .modal {
     width: 83%;
     height: 140px;
-    background-color: rgb(169, 169, 169, 0.9);
-    border-radius: 10px;
+    background-color: #fff;
+    border-radius: 3px;
     display: flex;
     flex-direction: column;
-    justify-content: space-around;
+    justify-content: space-between;
     align-items: center;
 }
 .input-edit {
     width: 80%;
     height: 30px;
-    margin-top: 20px;
+    margin-top: 35px;
     padding-left: 10px;
     border-radius: 5px;
     border: 1px solid #c9bfbb;
+    box-shadow: 0 0 2px inset #999;
 }
-.btn-wrap {
+.input-edit:focus {
+    outline: 2px solid #e9b1ad;
+}
+.btn-update {
     width: 100%;
-    height: 30px;
-    display: flex;
-    justify-content: center;
-}
-.modal-btn {
-    width: 30%;
-    height: 30px;
-    background-color: #E9B1AD;
-    border-radius: 30px;
+    height: 40px;
+    background-color: #e9b1ad;
     display: flex;
     justify-content: center;
     cursor: pointer;
-    box-shadow: 0 0 6px #999;
-    margin-bottom: 10px;
+    border-radius: 0 0 3px 3px;
 }
-.modal-btn > span {
-    color: white;
+.btn-update > span {
+    color: #fff;
     font-size: 18px;
-    line-height: 35px;
+    line-height: 48px;
+}
+.btn-update > i {
+    font-size: 11px;
+    line-height: 40px;
+    padding-left: 7px;
+    color: #fff;
 }

@@ -4,10 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ToDoList</title>
-    <link rel="stylesheet" href="css/reset.css">
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/mediaqueries.css">
+    <title>투두리스트</title>
     <script src="https://kit.fontawesome.com/14410e483b.js" crossorigin="anonymous"></script>
 </head>
 <body>
@@ -19,26 +16,36 @@
                 <!-- 입력창 -->
                 <div class="input-wrap">
                     <input type="text" class="input-todo" placeholder="할 일을 입력해주세요."/>
-                    <button type="button" class="btn-add"><span>+</span></button>
+                    <button type="button" class="btn-add">
+                        <span>+</span>
+                    </button>
                 </div>
             </header>
             <main>
-                <!-- li태그(todo항목)가 추가되는 영역 -->
+                <!-- li태그(todo항목) 추가되는 영역 -->
                 <ul class="todo-list"></ul>
             </main>
             <footer>
-                <button type="button" class="btn-clear-all"><span>Clear All</span></button>
+                <input type="checkbox" class="sort-check" id="input-sort">
+                <label for="input-sort" class="sort-label">
+                    <span class="sort-switch"></span>
+                    <i class="fa-solid fa-sort"></i>
+                </label>
+                <button type="button" class="btn-clear-all">
+                    <span>Clear All</span>
+                </button>
             </footer>
             <!-- todo 수정 모달 -->
             <div class="modal-wrap">
                 <div class="modal">
                     <input type="text" class="input-edit" value="">
-                    <button type="button" class="modal-btn btn-update"><span>Edit</span></button>
+                    <button type="button" class="btn-update">
+                        <span>Edit</span>
+                        <i class="fa-solid fa-pen"></i>
+                    </button>
                 </div>
-                <span class="icon-close"><i class="fa-solid fa-xmark"></i></span>
             </div>
         </div>
     </div>
-    <script type="text/javascript" src="js/script.js"></script>
 </body>
 </html>
