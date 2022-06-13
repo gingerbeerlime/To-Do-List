@@ -3,7 +3,7 @@ import './assets/style.css'
 import './assets/mediaqueries.css'
 
 import { todoList, todoInput, addButton, sortSwitch, clearAllButton, emptyListMessage } from './lib/public-variables'
-import { getTodoData, setTodoData } from './lib/public-functions'
+import { getTodoData, setTodoData, findParentLINode } from './lib/public-functions'
 import { onDrop } from './lib/drag-drop-todo'
 import { openEditModal, updateEditTodo, closeEditModal, editModal, editInput, editUpdateButton } from './lib/edit-todo'
 import { createTodoItem, addTodo } from './lib/add-remove-todo'
@@ -26,16 +26,19 @@ todoInput.addEventListener('keyup', (e) => {
     if (e.keyCode === 13) addTodo()
 })
 clearAllButton.addEventListener('click', () => {
+    if (sortSwitch.checked) sortSwitch.click()
     while (todoList.hasChildNodes()) {
         todoList.removeChild(todoList.firstChild)
     }
     setTodoData([])
     todoList.append(emptyListMessage)
-    document.getElementById('sort-switch').checked = false
 })
 
 // -- edit event
-todoList.addEventListener('dblclick', openEditModal)
+todoList.addEventListener('dblclick', (e) => {
+    const targetCheckbox = findParentLINode(e.target).querySelector('.check-todo')
+    if (!sortSwitch.checked && !targetCheckbox.checked) openEditModal(e.target)
+})
 editUpdateButton.addEventListener('click', updateEditTodo)
 editInput.addEventListener('keyup', (e) => {
     if (e.keyCode === 13) updateEditTodo()

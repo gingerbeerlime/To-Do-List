@@ -2,6 +2,8 @@ import { todoList, pointColor, divColorDefault } from './public-variables'
 import { getTodoData, setTodoData, getIndex } from './public-functions'
 
 const onDragStart = (e) => {
+    if (!e.currentTarget.hasAttribute('draggable')) return
+
     e.dataTransfer.setData('idx', getIndex(e.target))
     const todoBox = e.currentTarget.querySelector('.todo-box')
     todoBox.style.backgroundColor = pointColor
@@ -10,6 +12,8 @@ const onDragStart = (e) => {
 }
 
 const onDrop = (e) => {
+    if (e.dataTransfer.getData('idx') === '') return
+
     const dragIdx = Number(e.dataTransfer.getData('idx'))
     const firstCheckedIdx = getTodoData().findIndex(todo => !!todo.checked)
     let dropIdx = getIndex(e.target)
@@ -33,6 +37,8 @@ const onDrop = (e) => {
 }
 
 const onDragEnd = (e) => {
+    if (!e.currentTarget.hasAttribute('draggable')) return
+
     const todoBox = e.currentTarget.querySelector('.todo-box')
     todoBox.style.backgroundColor = divColorDefault
     todoBox.querySelector('.todo-text').classList.remove('ondrag')

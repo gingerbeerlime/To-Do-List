@@ -26,6 +26,7 @@ const countTodoItem = () => document.getElementsByTagName('LI').length
 export {
     getTodoData,
     setTodoData,
+    findParentLINode,
     getIndex,
     countTodoItem
 }
