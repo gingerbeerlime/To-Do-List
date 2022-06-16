@@ -10,6 +10,33 @@ class Todo {
     }
 }
 
+const removeTodo = (removeIdx) => {
+    const todoData = getTodoData()
+    const newTodoData = todoData.filter((_, idx) => idx !== removeIdx)
+    setTodoData(newTodoData)
+    todoList.removeChild(todoList.children[removeIdx])
+}
+
+const moveToBottomCheckedTodo = (checkedIdx) => {
+    const todoData = getTodoData()
+    todoData[checkedIdx].checked = !todoData[checkedIdx].checked
+    if (todoData[checkedIdx].checked) {
+        todoList.appendChild(todoList.children[checkedIdx])
+        todoData.push(...todoData.splice(checkedIdx, 1))
+    } else {
+        const firstCheckedIdx = todoData.findIndex(todo => todo.checked === true)
+        // 이벤트타겟이 첫번째 체크항목 상단으로 이동되는 조건
+        if (checkedIdx !== (firstCheckedIdx - 1)) {
+            todoList.insertBefore(todoList.children[checkedIdx], todoList.children[firstCheckedIdx] ?? null)
+        }
+        // localStorage 배열을 재정렬시켜야하는 조건
+        if (checkedIdx !== (firstCheckedIdx - 1) && firstCheckedIdx !== -1) {
+            todoData.splice(firstCheckedIdx, 0, ...todoData.splice(checkedIdx, 1))
+        }
+    }
+    setTodoData(todoData)
+}
+
 // @param todoObj <object> { txt : todo내용, checked : true/false(default) }
 const createTodoItem = (todoObj) => {
     const todoItem = document.createElement('li')
@@ -51,35 +78,6 @@ const createTodoItem = (todoObj) => {
     todoItem.classList.add('todo-item')
     todoItem.addEventListener('dragstart', onDragStart)
     todoItem.addEventListener('dragend', onDragEnd)
-
-    // [functions]
-    const removeTodo = (removeIdx) => {
-        const todoData = getTodoData()
-        const newTodoData = todoData.filter((_, idx) => idx !== removeIdx)
-        setTodoData(newTodoData)
-        todoList.removeChild(todoList.children[removeIdx])
-    }
-
-    const moveToBottomCheckedTodo = (checkedIdx) => {
-        const todoData = getTodoData()
-        todoData[checkedIdx].checked = !todoData[checkedIdx].checked
-        if (todoData[checkedIdx].checked) {
-            todoList.append(todoList.removeChild(todoList.children[checkedIdx]))
-            todoData.push(...todoData.splice(checkedIdx, 1))
-        } else {
-            const firstCheckedIdx = todoData.findIndex(todo => todo.checked === true)
-            // 이벤트타겟이 첫번째 체크항목 상단으로 이동되는 조건
-            if (checkedIdx !== (firstCheckedIdx - 1)) {
-                const checkedTodo = todoList.removeChild(todoList.children[checkedIdx])
-                todoList.insertBefore(checkedTodo, todoList.children[firstCheckedIdx] ?? null)
-            }
-            // localStorage 배열을 재정렬시켜야하는 조건
-            if (checkedIdx !== (firstCheckedIdx - 1) && firstCheckedIdx !== -1) {
-                todoData.splice(firstCheckedIdx, 0, ...todoData.splice(checkedIdx, 1))
-            }
-        }
-        setTodoData(todoData)
-    }
 
     // [events]
     removeButton.addEventListener('click', (e) => {
